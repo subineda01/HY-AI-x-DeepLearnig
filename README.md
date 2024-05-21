@@ -7,8 +7,11 @@ Members :
 
 🔍 목차
 1. Proposal
-2. DataSets
-3. Methodology
-4. Evaluation & Analysis
-5. Related Works
+3. DataSets
+4. Methodology
+5. Evaluation & Analysis
+6. Related Works
 
+Proposal
+- Motivation: Why are you doing this?
+- What do you want to see at the end?
