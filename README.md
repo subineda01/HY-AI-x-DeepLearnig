@@ -55,9 +55,21 @@ Machine Reading Comprehension 에서 앙상블 접근 방식이 out of distribut
 다음으로는 앙상블 기법에 활용할 모델들을 소개합니다.
 
 ### 1. BertForSequenceClassification
+위 모델은 Hugging Face의 Transformer 라이브러리에서 제공하는 모델로 텍스트 분류 작업을 위해 설계된 BERT 기반 모델입니다. 이 모델은 BERT의 기본 아키텍쳐 위에 분류를 위한 추가 레이어를 포함하고 있습니다.'
+
 전체구조
 
 ![image](https://github.com/subineda01/HY-AI-x-DeepLearnig/assets/144909753/18a71006-4452-4258-93b4-3a8a0c0ff3ab)
 
+모델은 크게 두가지 구조인 BertModel과 Classifier로 이루어져 있습니다. BertModel은 Transformer layer가 여러겹으로 쌓여있는 본체입니다. 이는 BertEmbedding 부분과 BertEncoder부분으로 나누어져 있습니다. BertEmbedding은 문장을 입력으로 받아 token, segment, position을 임베딩하여 값으로 만들고 더해서 반환해주는 역할을 합니다.
 
+BertEmbedding
+
+![image](https://github.com/subineda01/HY-AI-x-DeepLearnig/assets/144909753/589d2e7d-aeda-44d5-8a0c-9f73000fd8b6)
+
+BertEncoder
+
+임베딩 되어 있는 값들을 토대로 Multi-Head Attention을 통해 입력 토큰 간의 관계를 학습합니다. 이후 어텐션의 출력을 반환하고 Residual Connection을 통해 인코딩을 완료합니다.
+
+이후 클래스 수에 맞는 출력 벡터로 변환되어 소프트맥스 함수를 통해 출력 벡터를 확률 분포로 변환하여 최종 예측을 진행합니다.
 
