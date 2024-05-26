@@ -29,8 +29,13 @@ Prior research Link : <https://aclanthology.org/D18-1404.pdf>
 Data link : <https://github.com/dair-ai/emotion_dataset>
 
 ## DataSets info
+
 'Emotion Dataset' 중 학습을 위해 제공한 split data를 사용함.
 
+![데이터파일](https://github.com/subineda01/HY-AI-x-DeepLearnig/blob/main/image/dataset.png)
+
+train.csv(16,000), validation.csv(2,000), test.csv(2,000)
+-> 총 20,000개의 데이터 (1968KB)
 
 
 ## Data example
