@@ -16,9 +16,45 @@ Proposal
 - Motivation: Why are you doing this?
 - What do you want to see at the end?
 
+-------------------------
+# III.DataSets
+커뮤니티 기반의 독립 연구소인 DAIR.AI에서 제공하는 'Emotion Dataset'을 이용함.
+
+해당 데이터는 twitter API를 통해 수집된 영어문장을 여섯가지 기본감정들(anger, fear, joy, love, sadness, surprise)로 분류되었음.
+
+선행 연구인 ‘CARER: Contextualized Affect Representations for Emotion Recognition’의 접근을 기반으로 데이터가 가공처리 됨.
+
+Prior research Link : <https://aclanthology.org/D18-1404.pdf>  
+
+Data link : <https://github.com/dair-ai/emotion_dataset>
+
+## DataSets info
+'Emotion Dataset' 중 학습을 위해 제공한 split data를 사용함.
 
 
 
+## Data example
+```sh
+"text" : "im feeling quite sad and sorry for myself but ill snap out of it soon",
+"label": 0
+```
+
+## Features
+- text : 한 개의 문장으로 구성된 string 형태의 feature
+- label : 감정을 분류한 라벨로, 6가지 상태를 표현
+
+| Emotion | label |
+| ------- | ------- |
+| sadness | 0 |
+| joy | 1 |
+| love | 2 |
+| anger | 3 |
+| fear | 4 |
+| surprise | 5 |
+
+
+
+-----------------------
 # III.Methodology
 ### 앙상블 기법
 앙상블 기법은 여러 모델의 예측을 결합하여 최종 예측을 도출하는 방법으로, 개별 모델의 단점을 보완하고 성능을 향상시킬 수 있음
