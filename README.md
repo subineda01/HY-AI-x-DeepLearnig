@@ -46,7 +46,7 @@ train.csv(16,000), validation.csv(2,000), test.csv(2,000)
 
 ## Features
 - text : 한 개의 문장으로 구성된 string 형태의 feature
-- label : 감정을 분류한 라벨로, 6가지 상태를 표현
+- label : 감정을 분류한 라벨로 int 형태의 feature, 6가지 상태를 표현
 
 | Emotion | label |
 | ------- | ------- |
