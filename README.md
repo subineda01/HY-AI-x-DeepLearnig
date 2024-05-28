@@ -5,7 +5,7 @@ Members :
 
 장수빈, 수학과,
 
-박승현, 경영학부,
+박승현, 경영학부, boyojeck@hanyang.ac.kr
 
 이상백, 기계공학부,
 
