@@ -12,8 +12,10 @@ Members :
 4. Evaluation & Analysis
 5. Related Works
 
-Proposal
+-------------------------
+# Proposal
 - Motivation: Why are you doing this?
+  
 - What do you want to see at the end?
 
 -------------------------
