@@ -90,56 +90,78 @@ train.csv(16,000), validation.csv(2,000), test.csv(2,000)
 
 -----------------------
 # III.Methodology
-### 앙상블 기법
-앙상블 기법은 여러 모델의 예측을 결합하여 최종 예측을 도출하는 방법으로, 개별 모델의 단점을 보완하고 성능을 향상시킬 수 있음
-일반적으로 앙상블 기법은 과적합을 줄이고 모델의 일반화 성능을 향상시키는데 유리함
 
-### 앙상블 기법 종류
-1. 배깅 : 여러 모델을 병렬로 학습시키고, 각 모델의 예측을 평균 또는 투표 방식으로 결합하는 방식 ex) Random Forest
-   
-    ![image](https://github.com/subineda01/HY-AI-x-DeepLearnig/assets/144909753/86028d89-58c0-4fac-8e13-ea390d1a465a)
-
-2. 부스팅 : 모델을 순차적으로 학습시키고, 이전 모델이 잘못 예측한 샘플에 가중치를 부여하여 다음 모델을 학습시키는 방식 ex) XGBoost, LightGBM
-   
-   ![image](https://github.com/subineda01/HY-AI-x-DeepLearnig/assets/144909753/08a8e8c2-2b9b-472b-8b56-7fa1f7e2490c)
-
-
-3. 스태킹 : 여러 다른 유형의 모델을 학습시키고, 이들 모델의 예측을 기반으로 메타 모델을 학습시켜 최종 예측을 도출하는 방식
-   
-![image](https://github.com/subineda01/HY-AI-x-DeepLearnig/assets/144909753/c255d052-0b30-4a5a-bd94-6266931866b1)
-
-Machine Reading Comprehension 에서 앙상블 접근 방식이 out of distribution의 정확도를 개선하는데 있어 효과적이라는 방식임
-근거 논문 : https://ar5iv.labs.arxiv.org/html/2107.00368
-따라서 저희는 다양한 대규모 분류 모델들을 학습시킨 뒤 앙상블 기법을 사용하여 모델의 정확도를 더 향상시키는 방식을 사용하려 합니다.
-이중에서도 가중치를 동일하게 하는 equal weighting 방식을 사용할 겁니다.
-
-### Equal Weighting
-![image](https://github.com/subineda01/HY-AI-x-DeepLearnig/assets/144909753/60497872-bdb2-4a56-a237-19c2173c2e71)
-
-1. 평균 : 각 모델의 예측 확률을 평균내어 최종 예측을 도출하는 방식. 모든 모델의 예측을 동일하게 고려함
-2. 곱셈 : 각 모델의 예측 확률을 곱하여 최종 예측을 도출하는 방식. 모든 모델이 특정 위치에 대해 높은 확률을 보일 때 그 위치를 강조함
-3. 최대값 : 각 모델의 예측 확률 중 가장 높은 값을 선택하여 최종 예측을 도출. 단 하나의 모델이라도 높은 확신을 가진 위치를 강조함
-4. 최소값 : 각 모델의 예측 확률 중 가장 낮은 값을 선택하여 최종 예측을 도출. 가장 자신감이 낮은 모델의 예측을 고려하여 가장 보수적인 접근을 취함
-이 중 평균을 취하는 것이 일반적인 경우에 안정적이며 모든 모델의 예측을 균형있게 반영하기에 평균을 취하는 방식을 택했습니다.
-
-다음으로는 앙상블 기법에 활용할 모델들을 소개합니다.
-
-### 1. BertForSequenceClassification
+## 2. BertForSequenceClassification
 위 모델은 Hugging Face의 Transformer 라이브러리에서 제공하는 모델로 텍스트 분류 작업을 위해 설계된 BERT 기반 모델입니다. 이 모델은 BERT의 기본 아키텍쳐 위에 분류를 위한 추가 레이어를 포함하고 있습니다.'
 
 전체구조
 
 ![image](https://github.com/subineda01/HY-AI-x-DeepLearnig/assets/144909753/18a71006-4452-4258-93b4-3a8a0c0ff3ab)
 
-모델은 크게 두가지 구조인 BertModel과 Classifier로 이루어져 있습니다. BertModel은 Transformer layer가 여러겹으로 쌓여있는 본체입니다. 이는 BertEmbedding 부분과 BertEncoder부분으로 나누어져 있습니다. BertEmbedding은 문장을 입력으로 받아 token, segment, position을 임베딩하여 값으로 만들고 더해서 반환해주는 역할을 합니다.
+모델은 크게 두가지 구조인 BertModel과 Classifier로 이루어져 있습니다. BertModel은 Transformer layer가 여러겹으로 쌓여있는 본체입니다. 이는 BertEmbedding 부분과 BertEncoder부분으로 나누어져 있습니다. 
 
-BertEmbedding
+### BertEmbedding
 
 ![image](https://github.com/subineda01/HY-AI-x-DeepLearnig/assets/144909753/589d2e7d-aeda-44d5-8a0c-9f73000fd8b6)
 
-BertEncoder
+BertEmbedding은 문장을 입력으로 받아 token, segment, position을 임베딩하여 값으로 만들고 더해서 반환해주는 역할을 합니다.
+1. 토크나이징(Tokenization):
+   * 입력 텍스트는 WordPiece 토크나이저를 통해 토큰으로 분해됨
+   * 토큰은 고유한 정수로 매핑됨
+2. 입력 임베딩(Input Embeddings):
+   * Token Embedding : 각 토큰에 대한 고유한 임베딩 벡터
+   * Segment Embedding : 문장이 두개일 때 첫 문장과 두 번째 문당을 구분하기 위한 임베딩 벡터
+   * Position Embedding : 각 토큰의 위치를 나타내는 임베딩 벡터. 문장 내에서 각 토큰의 순서를 모델이 알 수 있게 함
 
-임베딩 되어 있는 값들을 토대로 Multi-Head Attention을 통해 입력 토큰 간의 관계를 학습합니다. 이후 어텐션의 출력을 반환하고 Residual Connection을 통해 인코딩을 완료합니다.
+### BertEncoder
 
-이후 클래스 수에 맞는 출력 벡터로 변환되어 소프트맥스 함수를 통해 출력 벡터를 확률 분포로 변환하여 최종 예측을 진행합니다.
+BERT는 트랜스포머(Transformer) 모델의 인코더 부분만 사용함
+
+#### 트랜스포머 인코더 개요
+
+BERT의 인코더는 트랜스포머 인코더 블록의 스택으로 구성됨. 트랜스포머 인코더는 여러 층의 인코더 블록으로 구성되며, 각 블록은 다음 두 가지 주요 구성 요소로 이루어져 있음
+
+1. Multi-Head Self-Attention Mechanism:
+   - 각 토큰이 다른 모든 토큰과의 관계(주의 메커니즘)를 학습할 수 있게 함
+   - 다양한 주의(attention) 헤드를 사용하여 서로 다른 부분에 집중할 수 있음.
+
+2. Position-wise Feed-Forward Neural Network:
+   - Self-attention의 출력을 각 토큰에 대해 독립적으로 처리하는 완전 연결 네트워크
+   - 비선형 활성화 함수를 사용하여 복잡한 표현을 학습
+
+#### BERT 인코더 구성 요소
+
+##### Multi-Head Self-Attention
+
+Multi-Head Self-Attention 메커니즘은 각 토큰이 문장의 다른 모든 토큰과의 관계를 학습할 수 있게 함
+
+- **Query, Key, Value 계산**: 입력 임베딩을 세 개의 행렬 \( W_Q \), \( W_K \), \( W_V \)에 곱하여 Query, Key, Value 행렬을 만듬
+  
+   ![QKV Calculation](https://latex.codecogs.com/svg.latex?Q%20%3D%20XW_Q%2C%20%5Cquad%20K%20%3D%20XW_K%2C%20%5Cquad%20V%20%3D%20XW_V)
+
+- **어텐션 점수 계산**: Query와 Key의 내적을 통해 각 토큰 쌍의 점수를 계산하고, 이를 스케일링 후 소프트맥스 함수를 적용하여 가중치를 얻음
+  
+   ![Attention Score](https://latex.codecogs.com/svg.latex?%5Ctext%7BAttention%7D(Q%2C%20K%2C%20V)%20%3D%20%5Ctext%7Bsoftmax%7D%5Cleft(%5Cfrac%7BQK%5ET%7D%7B%5Csqrt%7Bd_k%7D%7D%5Cright)V)
+
+- **Multi-Head Attention**: 여러 개의 어텐션 헤드를 사용하여 각 헤드의 출력을 결합
+  
+   ![Multi-Head Attention](https://latex.codecogs.com/svg.latex?%5Ctext%7BMultiHead%7D(Q%2C%20K%2C%20V)%20%3D%20%5Ctext%7BConcat%7D(%5Ctext%7Bhead%7D_1%2C%20%5Cldots%2C%20%5Ctext%7Bhead%7D_h)W_O)
+
+### Position-wise Feed-Forward Neural Network
+
+각 토큰에 대해 독립적으로 작동하는 두 개의 선형 변환과 비선형 활성화 함수로 구성된 완전 연결 신경망
+
+![Feed-Forward Neural Network](https://latex.codecogs.com/svg.latex?%5Ctext%7BFFN%7D(x)%20%3D%20%5Ctext%7Bmax%7D(0%2C%20xW_1%20%2B%20b_1)W_2%20%2B%20b_2)
+
+### 잔차 연결과 층 정규화 (Residual Connections and Layer Normalization)
+
+각 트랜스포머 인코더 블록은 두 개의 서브레이어(Sublayer)로 구성:
+
+1. **Self-Attention Sublayer**: Multi-Head Self-Attention을 적용
+2. **Feed-Forward Sublayer**: Position-wise Feed-Forward Neural Network를 적용
+
+각 서브레이어 후에는 잔차 연결과 층 정규화를 적용하여 학습을 안정화하고 성능을 향상
+
+
+
 
