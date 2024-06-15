@@ -146,7 +146,21 @@ Multi-Head Self-Attention 메커니즘은 각 토큰이 문장의 다른 모든 
 
 각 서브레이어 후에는 잔차 연결과 층 정규화를 적용하여 학습을 안정화하고 성능을 향상
 
-# IV. Evaluation & Analysis
+# IV. Evaluation & Result
+### Word Cloud
+![wordcloud](https://github.com/subineda01/HY-AI-x-DeepLearnig/assets/144909753/7c09d6b2-6d35-499e-829f-e3a0c45c03dc)
+
+### Loss Graph
+
+![losses](https://github.com/subineda01/HY-AI-x-DeepLearnig/assets/144909753/f59b3c2c-3543-4fa6-b6e5-db7cfd8b9b79)
+
+### Confusion Matrix
+![confusion_matrix](https://github.com/subineda01/HY-AI-x-DeepLearnig/assets/144909753/c118b4a3-fb0e-40ca-be83-a38c75df86da)
+
+### Result
+
+![image](https://github.com/subineda01/HY-AI-x-DeepLearnig/assets/144909753/cd90b260-6261-4686-971f-1b6c57635c0b)
+
 
 # V. Conclusion: Discussion
 
