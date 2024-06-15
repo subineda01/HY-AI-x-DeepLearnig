@@ -188,7 +188,7 @@ Multi-Head Self-Attention 메커니즘은 각 토큰이 문장의 다른 모든 
 
 ### 블로그(Blog)
 ### 논문
-[Contextualized Affect Representations for Emotion Recognition](file:///C:/Users/%EC%9D%B4%EA%B0%80%EB%B9%88/Downloads/CARER%20Contextualized%20Affect%20Representations%20for%20Emotion%20Recognition.pdf)
+[Contextualized Affect Representations for Emotion Recognition](https://aclanthology.org/D18-1404.pdf)
 
 
 
