@@ -74,7 +74,194 @@ train.csv(16,000), validation.csv(2,000), test.csv(2,000)
 
 -----------------------
 # III.Methodology
+## 1. Lstm classification
 
+해당 모델은 lstm에 classification 을 붙인 모델임.
+
+lstm설명 -> 토크나이즈 부가 설명 -> activation 및 loss function 설명
+
+학습머신 : intel i7 12gen, ddr5 16GB
+
+### total code
+```python
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.preprocessing import LabelEncoder
+import torch
+from torch.utils.data import Dataset, DataLoader
+from torch.nn.utils.rnn import pad_sequence
+from torchtext.vocab import build_vocab_from_iterator
+from torchtext.data.utils import get_tokenizer
+import torch.nn as nn
+import torch.optim as optim
+
+# 데이터 로드 및 전처리
+train_data = pd.read_csv('train.csv')
+val_data = pd.read_csv('validation.csv')
+
+# 훈련 데이터 전처리
+train_sentences = train_data['text'].values
+train_labels = train_data['label'].values
+
+# 검증 데이터 전처리
+val_sentences = val_data['text'].values
+val_labels = val_data['label'].values
+
+label_encoder = LabelEncoder()
+train_labels = label_encoder.fit_transform(train_labels)
+val_labels = label_encoder.transform(val_labels)
+
+tokenizer = get_tokenizer("basic_english")
+
+def yield_tokens(data_iter):
+    for text in data_iter:
+        yield tokenizer(text)
+
+vocab = build_vocab_from_iterator(yield_tokens(train_sentences), specials=["<pad>", "<unk>"])
+vocab.set_default_index(vocab["<unk>"])
+
+class TextDataset(Dataset):
+    def __init__(self, texts, labels, vocab, tokenizer):
+        self.texts = texts
+        self.labels = labels
+        self.vocab = vocab
+        self.tokenizer = tokenizer
+
+    def __len__(self):
+        return len(self.texts)
+
+    def __getitem__(self, idx):
+        text = self.texts[idx]
+        label = self.labels[idx]
+        tokens = self.tokenizer(text)
+        token_ids = [self.vocab[token] for token in tokens]
+        return torch.tensor(token_ids, dtype=torch.long), torch.tensor(label, dtype=torch.long)
+
+def collate_batch(batch):
+    text_list, label_list = [], []
+    for _text, _label in batch:
+        text_list.append(torch.tensor(_text, dtype=torch.long))
+        label_list.append(torch.tensor(_label, dtype=torch.long))
+    return pad_sequence(text_list, batch_first=True, padding_value=vocab["<pad>"]), torch.stack(label_list)
+
+train_dataset = TextDataset(train_sentences, train_labels, vocab, tokenizer)
+val_dataset = TextDataset(val_sentences, val_labels, vocab, tokenizer)
+
+train_dataloader = DataLoader(train_dataset, batch_size='', shuffle=True, collate_fn=collate_batch)  # 배치사이즈 조정
+val_dataloader = DataLoader(val_dataset, batch_size=32, shuffle=False, collate_fn=collate_batch)
+
+class LSTMClassifier(nn.Module):
+    def __init__(self, vocab_size, embed_dim, lstm_units, num_classes, dropout_rate):
+        super(LSTMClassifier, self).__init__()
+        self.embedding = nn.Embedding(vocab_size, embed_dim, padding_idx=vocab["<pad>"])
+        self.lstm = nn.LSTM(embed_dim, lstm_units, num_layers = '', batch_first=True) # LSTM 레이어 수 조정
+        self.dropout = nn.Dropout(dropout_rate)
+        self.fc = nn.Linear(lstm_units, num_classes)
+
+    def forward(self, x):
+        x = self.embedding(x)
+        x, (hidden, _) = self.lstm(x)
+        x = self.dropout(hidden[-1])
+        x = self.fc(x)
+        return x
+
+# 하이퍼파라미터 설정
+embed_dim = ''
+lstm_units = ''
+dropout_rate = ''
+learning_rate = ''
+num_epochs = ''
+
+# 모델 초기화
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+model = LSTMClassifier(vocab_size=len(vocab), embed_dim=embed_dim, lstm_units=lstm_units, num_classes=6, dropout_rate=dropout_rate).to(device)
+criterion = nn.CrossEntropyLoss()
+optimizer = optim.Adam(model.parameters(), lr=learning_rate)
+
+# 손실 기록을 위한 리스트 초기화
+train_losses = []
+val_losses = []
+
+# 모델 학습
+model.train()
+for epoch in range(num_epochs):
+    train_loss = 0.0
+    for texts, labels in train_dataloader:
+        texts, labels = texts.to(device), labels.to(device)
+        optimizer.zero_grad()
+        outputs = model(texts)
+        loss = criterion(outputs, labels)
+        loss.backward()
+        optimizer.step()
+        train_loss += loss.item()
+
+    # 에포크별 평균 훈련 손실 계산
+    train_loss /= len(train_dataloader)
+    train_losses.append(train_loss)
+
+    # 검증 데이터 손실 계산
+    model.eval()
+    val_loss = 0.0
+    with torch.no_grad():
+        for texts, labels in val_dataloader:
+            texts, labels = texts.to(device), labels.to(device)
+            outputs = model(texts)
+            loss = criterion(outputs, labels)
+            val_loss += loss.item()
+
+    # 에포크별 평균 검증 손실 계산
+    val_loss /= len(val_dataloader)
+    val_losses.append(val_loss)
+
+    print(f'Epoch {epoch+1}/{num_epochs}, Train Loss: {train_loss}, Validation Loss: {val_loss}')
+
+# 손실 시각화
+plt.figure(figsize=(10, 6))
+plt.plot(range(1, num_epochs + 1), train_losses, label='Train Loss', color='blue')
+plt.plot(range(1, num_epochs + 1), val_losses, label='Validation Loss', color='orange')
+plt.xlabel('Epochs')
+plt.ylabel('Loss')
+plt.title('Train and Validation Loss Over Epochs')
+plt.legend()
+plt.grid(True)
+plt.show()
+
+# 모델 평가 함수
+def evaluate_model(model, dataloader):
+    model.eval()
+    correct = 0
+    total = 0
+    with torch.no_grad():
+        for texts, labels in dataloader:
+            texts, labels = texts.to(device), labels.to(device)
+            outputs = model(texts)
+            _, predicted = torch.max(outputs.data, 1)
+            total += labels.size(0)
+            correct += (predicted == labels).sum().item()
+    accuracy = correct / total
+    return accuracy
+
+'''
+# 모델 저장
+torch.save(model.state_dict(), 'model_weights.pth')
+torch.save(model, 'model.pth')
+'''
+
+# 테스트 데이터 로드 및 전처리
+test_data = pd.read_csv('test.csv')
+test_sentences = test_data['text'].values
+test_labels = test_data['label'].values
+test_labels = label_encoder.transform(test_labels)
+
+test_dataset = TextDataset(test_sentences, test_labels, vocab, tokenizer)
+test_dataloader = DataLoader(test_dataset, batch_size=32, shuffle=False, collate_fn=collate_batch)
+
+# 테스트 데이터로 모델 평가
+test_accuracy = evaluate_model(model, test_dataloader)
+print(f'Test Accuracy: {test_accuracy}')
+
+```
 ## 2. BertForSequenceClassification
 위 모델은 Hugging Face의 Transformer 라이브러리에서 제공하는 모델로 텍스트 분류 작업을 위해 설계된 BERT 기반 모델이이다. 이 모델은 BERT의 기본 아키텍쳐 위에 분류를 위한 추가 레이어를 포함하고 있다.
 
