@@ -52,7 +52,7 @@ train.csv(16,000), validation.csv(2,000), test.csv(2,000)
 
 train.csv의 데이터 그래프
 
-![데이터파일](https://github.com/subineda01/HY-AI-x-DeepLearnig/blob/main/image/dataset.png)
+![image](htps://github.com/subineda01/HY-AI-x-DeepLearnig/blob/main/image/distribution%20of%20label.png)
 
 ## Data example
 ```sh
