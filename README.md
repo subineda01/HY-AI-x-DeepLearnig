@@ -50,9 +50,9 @@ Data link : <https://github.com/dair-ai/emotion_dataset>
 train.csv(16,000), validation.csv(2,000), test.csv(2,000)
 -> 총 20,000개의 데이터 (1968KB)
 
-train.csv의 데이터 그래프
+<train.csv의 데이터 그래프>
 
-![image](htps://github.com/subineda01/HY-AI-x-DeepLearnig/blob/main/image/distribution%20of%20label.png)
+<img src="https://github.com/subineda01/HY-AI-x-DeepLearnig/blob/main/image/distribution%20of%20label.png?raw=true" width="500" height="500"/>
 
 ## Data example
 ```sh
@@ -108,7 +108,7 @@ Token indices: [3, 4, 5, 6]
 
 이후 임베딩(Word Embedding)을 통해 각 토큰을 벡터 형태로 변환하여 PyTorch에서 사용할 수 있는 형태로 변환합니다.
 
-임베딩 된 토큰을 이용하여 문장 학습을 진행시킵니다. 
+임베딩 된 토큰을 이용하여 문장을 재구성하고(Token indices) 문장 학습을 진행시킵니다. 
 
 Activation Function은 가장 보편적인 ```Adam```을 사용하였으며, loss function로는 ```nn.CrossEntropyLoss()```을 사용하였습니다.
 
@@ -298,6 +298,54 @@ test_accuracy = evaluate_model(model, test_dataloader)
 print(f'Test Accuracy: {test_accuracy}')
 
 ```
+
+## Result
+
+Default parameter는 다음과 같이 설정하였습니다.
+
+```
+lstm_layer = 1
+Batch_size = 32
+embed_dim = 128
+lstm_units = 128
+dropout_rate = 0.3
+learning_rate = 1e-3
+num_epochs = 10
+```
+![default](https://github.com/subineda01/HY-AI-x-DeepLearnig/blob/main/image/%EA%B8%B0%EB%B3%B8(10%EC%97%90%ED%8F%AD,1%EB%A0%88%EC%9D%B4%EC%96%B4)0.594.png?raw=true)
+```Accuracy : 0.594```
+
+Loss그래프에서 epoch가 지날 때마다 Train Loss가 감소하고, Validation Loss 또한 유의미하게 감소하는 것을 확인할 수 있었습니다.
+
+하지만 감소의 정도가 크지 않고, 정확도 또한 59.4% 수준으로 높지 않았기 때문에 다음과 같은 parameter tuning을 진행하였습니다.
+
+### (1)learning_rate = 1e-2
+
+![lr](https://github.com/subineda01/HY-AI-x-DeepLearnig/blob/main/image/10epoch_1lstm_lr001_0.454.png?raw=true)
+```Accuracy : 0.454```
+
+### (2)Batch_size = 64
+
+![Batch](https://github.com/subineda01/HY-AI-x-DeepLearnig/blob/main/image/10epoch_1lstm_64batch_accu62.35.png?raw=true)
+```Accuracy : 0.6235```
+
+### (3)lstm_layer = 2
+
+![layer](https://github.com/subineda01/HY-AI-x-DeepLearnig/blob/main/image/2%EB%A0%88%EC%9D%B4%EC%96%B40.872.png?raw=true)
+```Accuracy : 0.872```
+
+### (4)num_epochs = 20
+
+![epoch](https://github.com/subineda01/HY-AI-x-DeepLearnig/blob/main/image/20epoch%EC%9C%BC%EB%A1%9C%EB%8A%98%EB%A6%BC0.8725.png?raw=true)
+```Accuracy : 0.8725```
+
+위 4가지 parameter tuning 중 가장 효과적이었던 (3)```lstm_layer```와 (4)```num_epochs```를 조정하는 것으로 모델의 성능을 향상시켰습니다. 
+
+![last](https://github.com/subineda01/HY-AI-x-DeepLearnig/blob/main/image/15%EC%97%90%ED%8F%AD,2%EB%A0%88%EC%9D%B4%EC%96%B40.9005.png?raw=true)
+```Accuracy : 0.9005```
+
+
+
 ## 2. BertForSequenceClassification
 위 모델은 Hugging Face의 Transformer 라이브러리에서 제공하는 모델로 텍스트 분류 작업을 위해 설계된 BERT 기반 모델이이다. 이 모델은 BERT의 기본 아키텍쳐 위에 분류를 위한 추가 레이어를 포함하고 있다.
 
@@ -424,8 +472,10 @@ Multi-Head Self-Attention 메커니즘은 각 토큰이 문장의 다른 모든 
 라이브러리(Library): 
 
 ### 블로그(Blog)
+[08-02 장단기 메모리(Long Short-Term Memory, LSTM)](https://wikidocs.net/22888)
 ### 논문
 [Contextualized Affect Representations for Emotion Recognition](https://aclanthology.org/D18-1404.pdf)
+
 
 
 
