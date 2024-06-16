@@ -3,7 +3,7 @@ Members :
 
 이가빈, 화학과, gabin0713@hanyang.ac.kr
 
-장수빈, 수학과,
+장수빈, 수학과, subineda01@hanyang.ac.kr
 
 박승현, 경영학부, boyojeck@hanyang.ac.kr
 
@@ -417,13 +417,14 @@ Multi-Head Self-Attention 메커니즘은 각 토큰이 문장의 다른 모든 
 
 각 서브레이어 후에는 잔차 연결과 층 정규화를 적용하여 학습을 안정화하고 성능을 향상
 
-# IV. Evaluation & Result
 ### Word Cloud
 ![wordcloud](https://github.com/subineda01/HY-AI-x-DeepLearnig/assets/144909753/7c09d6b2-6d35-499e-829f-e3a0c45c03dc)
 
 ### Loss Graph
 
-![losses](https://github.com/subineda01/HY-AI-x-DeepLearnig/assets/144909753/f59b3c2c-3543-4fa6-b6e5-db7cfd8b9b79)
+
+![losses](https://github.com/subineda01/HY-AI-x-DeepLearnig/assets/144909753/877302d4-9837-4efa-a285-7cf732a61549)
+
 
 ### Confusion Matrix
 ![confusion_matrix](https://github.com/subineda01/HY-AI-x-DeepLearnig/assets/144909753/c118b4a3-fb0e-40ca-be83-a38c75df86da)
@@ -431,9 +432,16 @@ Multi-Head Self-Attention 메커니즘은 각 토큰이 문장의 다른 모든 
 ### Result
 
 ![image](https://github.com/subineda01/HY-AI-x-DeepLearnig/assets/144909753/cd90b260-6261-4686-971f-1b6c57635c0b)
-다양한 하이퍼파라미터를 가지고 실험을 해보았음. 학습률을 2e-3 2e-4 2e-r-5를 사용하여 실험 해본 결과 2e-5일 때의 성능이 제일 나았음. 에포크 수는  5 10 30을 가지고 실험 해본 결과 에포크 수가 커지면 커질수록 validation loss가 커짐을 확인 할 수 있었음. 따라서 에포크 수는 5로 설정하였음. 마지막으로 배치 수를 16 32 64로 변경해 보았지만 큰 차이는 없었음. 결과적으로 정확도와 재현율이 모두 93%대를 기록하였음
+다양한 하이퍼파라미터를 가지고 실험을 해보았음. 학습률을 2e-3 2e-4 2e-r-5를 사용하여 실험 해본 결과 2e-5일 때의 성능이 제일 나았음. 에포크 수는  5 10 30을 가지고 실험 해본 결과 에포크 수가 커지면 커질수록 validation loss가 커짐을 확인 할 수 있었다. validation set에서는 에포크 1 이후로 더이상 학습을 잘 하지 못하는 것으로 보임. 따라서 에포크의 수를 늘리는 것은 과적합을 만든다고 판단하여 에포크 수를 작게 설정하였음. 마지막으로 배치 수를 16 32 64로 변경해 보았지만 큰 차이는 없었음. 결과적으로 정확도와 재현율이 모두 93%대를 기록하였음
 
-# V. Conclusion: Discussion
+최종 하이퍼 파리미터
+```
+BATCH_SIZE = 16
+EPOCHS = 5
+LEARNING_RATE = 2e-5
+```
+
+# IV. Conclusion: Discussion
 
 감정을 텍스트로부터 인식하는 데 있어 기존 방법들을 뛰어넘는 새로운 그래프 기반 알고리즘을 선보인다. 이 알고리즘은 감정이 표현되는 다양한 언어적 뉘앙스를 포착하고 모델링하기 위해 풍부한 구조적 설명자를 생성한다. 제안된 방법은 단어 임베딩을 통해 더욱 풍부해진 패턴 기반 표현을 사용하여 감정 인식 작업에서 뛰어난 성능을 보였준다.
 
@@ -465,7 +473,7 @@ Multi-Head Self-Attention 메커니즘은 각 토큰이 문장의 다른 모든 
 
 딥러닝 기반 감정 인식 기술은 여러 산업 분야에서 혁신적인 변화를 가져올 수 있는 잠재력을 가지고 있다. 이 기술은 정신 건강 관리, 고객 서비스, 인간-컴퓨터 상호작용, 사회적 문제 해결 등 다양한 분야에서 실질적인 변화를 이끌어낼 수 있다. 또한, 상용화 가능성이 높고, 다양한 새로운 기술로 발전할 수 있는 가능성이 크다. 앞으로도 지속적인 연구와 발전을 통해 인류의 삶의 질을 향상시키고, 더 나은 사회를 만드는 데 중요한 역할을 할 것이다.
 
-# VI. Related Works & References
+# V. Related Works & References
 
 툴(Tool): 
 
