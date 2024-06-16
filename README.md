@@ -50,6 +50,9 @@ Data link : <https://github.com/dair-ai/emotion_dataset>
 train.csv(16,000), validation.csv(2,000), test.csv(2,000)
 -> 총 20,000개의 데이터 (1968KB)
 
+train.csv의 데이터 그래프
+
+![데이터파일](https://github.com/subineda01/HY-AI-x-DeepLearnig/blob/main/image/dataset.png)
 
 ## Data example
 ```sh
@@ -81,6 +84,8 @@ train.csv(16,000), validation.csv(2,000), test.csv(2,000)
 문장 속 이전 단어의 정보를 기억하는 것을 시작으로, 다음의 새로운 단어와의 정보를 합쳐서 처리하면서 AI는 단어의 순서와 문맥을 이해할 수 있게 됩니다.
 
 이전의 노드에서 나온 한개의 정보와 새로운 단어의 정보만을 처리하기 때문에, 긴 문장에 대하여 처리할 때 앞의 정보를 잘 기억하지 못할 수 있는 문제가 발생합니다.
+
+![image](https://github.com/subineda01/HY-AI-x-DeepLearnig/blob/main/image/vaniila_rnn_and_different_lstm_ver2.png?raw=true)
     
 전통적인 RNN의 단점을 보완한 RNN의 일종을 LSTM(장단기 메모리, Long Short-Term Memory)라고 합니다. 
   
@@ -88,13 +93,30 @@ train.csv(16,000), validation.csv(2,000), test.csv(2,000)
 
 망각 게이트에 의해 일부 기억을 잃고, 입력게이트에 의해 유지시킬 기억을 저장한 셀 상태 $`C_t`$가 추가되어 다음 메모리 셀로 전파됩니다. 
 
+저희는 해당 프로젝트에서 LSTM를 사용하여 문장을 처리하고, Clssification 모델을 붙이는 것으로 문장의 감정을 분류하는 모델을 만들게 되었습니다.
+
+모델이 문장을 처리하기 위해서는, 문장이 모델이 이해할 수 있는 토큰의 형식으로 전처리 되어야 합니다.(Tokenization)
+
+저희는 ```torchtext.data.utils``` 라이브러리를 사용하여 토큰화를 진행하였습니다. 
+
+```
+Text: Hello, world!
+Tokens: ['hello', ',', 'world', '!']
+Token indices: [3, 4, 5, 6]
+```
+토큰화는 다음과 같이 텍스트 데이터에서 고유한 토큰을 수집하고, 이를 인덱스로 매핑하여 사전을 형성합니다.
+
+이후 임베딩(Word Embedding)을 통해 각 토큰을 벡터 형태로 변환하여 PyTorch에서 사용할 수 있는 형태로 변환합니다.
+
+임베딩 된 토큰을 이용하여 문장 학습을 진행시킵니다. 
+
+Activation Function은 가장 보편적인 ```Adam```을 사용하였으며, loss function로는 ```nn.CrossEntropyLoss()```을 사용하였습니다.
+
+```nn.CrossEntropyLoss()```에 포함된 ```softmax``` 함수를 이용하여 6가지의 감정으로 분류하였습니다.
 
 
-해당 모델은 lstm에 classification 을 붙인 모델임.
 
-lstm설명 -> 토크나이즈 부가 설명 -> activation 및 loss function 설명
-
-학습머신 : intel i7 12gen, ddr5 16GB
+학습머신 : 12th Gen Intel(R) Core(TM) i7-12700H, ddr5 16GB
 
 ### total code
 ```python
