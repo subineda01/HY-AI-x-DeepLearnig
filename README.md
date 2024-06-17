@@ -674,7 +674,7 @@ if __name__ == "__main__":
 ### Word Cloud
 ![wordcloud](https://github.com/subineda01/HY-AI-x-DeepLearnig/assets/144909753/7c09d6b2-6d35-499e-829f-e3a0c45c03dc)
 
-word Cloud 이미지는 텍스트 데이터에서 단어들의 빈도나 중요도를 시각적으로 표현한다.
+word Cloud 이미지는 텍스트 데이터에서 단어들의 빈도나 중요도를 시각적으로 표현한다. 'feel', 'feeling', really' 등의 단어들이 크게 표시되어 텍스트에서 빈도가 높거나 중요도가 큰 단어임을 표시한다. 
 
 ### Loss Graph
 
@@ -699,7 +699,11 @@ LEARNING_RATE = 2e-5
 
 # IV. Conclusion: Discussion
 
-감정을 텍스트로부터 인식하는 두가지 모델을 제시하였다. 이 알고리즘은 감정이 표현되는 다양한 언어적 뉘앙스를 포착하고 모델링하기 위해 풍부한 구조적 설명자를 생성한다. 제안된 방법은 단어 임베딩을 통해 더욱 풍부해진 패턴 기반 표현을 사용하여 감정 인식 작업에서 뛰어난 성능을 보여주었다.
+위 프로젝트에서 감정을 텍스트로부터 인식하는 두가지 모델을 제시하였다. 학습용으로 공개된 데이터 세트이기 때문에 이미 많은 모델이 제안되고 있지만, 이에 대한 참조 없이 적절한 알고리즘을 골라 모델을 완성하였다. 
+LSTM 약 90%, BERT 약 93%로 꽤 준수한 정확도를 기록하였지만, 성능을 향상시킬 수 있는 다른 방법에 대하여 논의하였다. 
+20epoch, 5epoch만에 과적합이 발생하였기 때문에 기존의 데이터보다 많은 양의 데이터를 이용해 학습시킬 필요성이 있어보인다. 또한 가중치 규제(Regularization)를 적용하거나, 조금 더 높은 Dropout 비율을 설정하는 방법도 존재한다. 
+처음 데이터셋을 보면 인덱스 0(sadness), 1(joy)의 데이터가 절반이상을 차지하고 있다. 이런 편향된 데이터는 모델의 정확도를 높이는데 방해되는 요인으로 작용하였을 것이다. 
+해당 데이터셋은 twitter API를 통해 추출하였기 때문에 해당 커뮤니티의 문화를 담고 있다. 크롤링 기술을 이용하여 다양한 SNS 문장을 확보할 수 있다면 전반적으로 개선되고 일반화된 모델을 생성하는데 도움이 되었을 것이다. 
 
 <위 모델을 통한 새로운 기술>
 
@@ -741,7 +745,19 @@ LEARNING_RATE = 2e-5
 
 툴(Tool): python
 
-라이브러리(Library): 
+라이브러리(Library):
+```python
+numpy
+pandas
+matplotlib.pyplot
+sklearn
+torchtext
+torch
+transformers
+seaborn
+wordcloud
+collections
+```
 
 ### 블로그(Blog)
 [torch.nn.LSTM](https://pytorch.org/docs/stable/generated/torch.nn.LSTM.html)
@@ -752,6 +768,8 @@ LEARNING_RATE = 2e-5
 
 ### 논문
 [Contextualized Affect Representations for Emotion Recognition](https://aclanthology.org/D18-1404.pdf)
+
+[CARER: Contextualized Affect Representations for Emotion Recognition](https://aclanthology.org/D18-1404.pdf)
 
 
 
