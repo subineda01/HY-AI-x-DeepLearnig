@@ -319,22 +319,22 @@ Loss그래프에서 epoch가 지날 때마다 Train Loss가 감소하고, Valida
 
 하지만 감소의 정도가 크지 않고, 정확도 또한 59.4% 수준으로 높지 않았기 때문에 다음과 같은 parameter tuning을 진행하였습니다.
 
-### (1)learning_rate = 1e-2
+### (1) learning_rate = 1e-2
 
 ![lr](https://github.com/subineda01/HY-AI-x-DeepLearnig/blob/main/image/10epoch_1lstm_lr001_0.454.png?raw=true)
 ```Accuracy : 0.454```
 
-### (2)Batch_size = 64
+### (2) Batch_size = 64
 
 ![Batch](https://github.com/subineda01/HY-AI-x-DeepLearnig/blob/main/image/10epoch_1lstm_64batch_accu62.35.png?raw=true)
 ```Accuracy : 0.6235```
 
-### (3)lstm_layer = 2
+### (3) lstm_layer = 2
 
 ![layer](https://github.com/subineda01/HY-AI-x-DeepLearnig/blob/main/image/2%EB%A0%88%EC%9D%B4%EC%96%B40.872.png?raw=true)
 ```Accuracy : 0.872```
 
-### (4)num_epochs = 20
+### (4) num_epochs = 20
 
 ![epoch](https://github.com/subineda01/HY-AI-x-DeepLearnig/blob/main/image/20epoch%EC%9C%BC%EB%A1%9C%EB%8A%98%EB%A6%BC0.8725.png?raw=true)
 ```Accuracy : 0.8725```
@@ -344,7 +344,9 @@ Loss그래프에서 epoch가 지날 때마다 Train Loss가 감소하고, Valida
 ![last](https://github.com/subineda01/HY-AI-x-DeepLearnig/blob/main/image/15%EC%97%90%ED%8F%AD,2%EB%A0%88%EC%9D%B4%EC%96%B40.9005.png?raw=true)
 ```Accuracy : 0.9005```
 
+이외에도 정확도를 높이기 위해 여러가지 hyper parameter tuning을 시도하였으나, 더 이상 올라가지 않았기 때문에 다른 모델을 찾아보았습니다.
 
+그래서 저희는 Bert를 사용하여 새로운 모델을 구성하였습니다. 
 
 ## 2. BertForSequenceClassification
 위 모델은 Hugging Face의 Transformer 라이브러리에서 제공하는 모델로 텍스트 분류 작업을 위해 설계된 BERT 기반 모델이이다. 이 모델은 BERT의 기본 아키텍쳐 위에 분류를 위한 추가 레이어를 포함하고 있다.
@@ -432,7 +434,7 @@ Multi-Head Self-Attention 메커니즘은 각 토큰이 문장의 다른 모든 
 ### Result
 
 ![image](https://github.com/subineda01/HY-AI-x-DeepLearnig/assets/144909753/cd90b260-6261-4686-971f-1b6c57635c0b)
-다양한 하이퍼파라미터를 가지고 실험을 해보았음. 학습률을 2e-3 2e-4 2e-r-5를 사용하여 실험 해본 결과 2e-5일 때의 성능이 제일 나았음. 에포크 수는  5 10 30을 가지고 실험 해본 결과 에포크 수가 커지면 커질수록 validation loss가 커짐을 확인 할 수 있었다. validation set에서는 에포크 1 이후로 더이상 학습을 잘 하지 못하는 것으로 보임. 따라서 에포크의 수를 늘리는 것은 과적합을 만든다고 판단하여 에포크 수를 작게 설정하였음. 마지막으로 배치 수를 16 32 64로 변경해 보았지만 큰 차이는 없었음. 결과적으로 정확도와 재현율이 모두 93%대를 기록하였음
+다양한 하이퍼파라미터를 가지고 실험을 해보았음. 학습률을 2e-3 2e-4 2e-r-5를 사용하여 실험 해본 결과 2e-5일 때의 성능이 제일 나았음. 에포크 수는  5 10 30을 가지고 실험 해본 결과 에포크 수가 커지면 커질수록 validation loss가 커짐을 확인 할 수 있었다. validation set에서는 에포크 1 이후로 더이상 학습을 잘 하지 못하는 것으로 보임.(학습을 시키지 않은 상태에서 모델에 validation.csv를 통과시킨 결과 0.135의 정확도가 나왔음. LLM이기 떄문에 1 epoch만으로 충분한 학습이 되었을 것으로 예측됨.) 따라서 에포크의 수를 늘리는 것은 과적합을 만든다고 판단하여 에포크 수를 작게 설정하였음. 마지막으로 배치 수를 16 32 64로 변경해 보았지만 큰 차이는 없었음. 결과적으로 정확도와 재현율이 모두 93%대를 기록하였음
 
 최종 하이퍼 파리미터
 ```
@@ -480,6 +482,8 @@ LEARNING_RATE = 2e-5
 라이브러리(Library): 
 
 ### 블로그(Blog)
+[torch.nn.LSTM](https://pytorch.org/docs/stable/generated/torch.nn.LSTM.html)
+[pytorch로 RNN, LSTM 구현하기](https://justkode.kr/deep-learning/pytorch-rnn/)
 [08-02 장단기 메모리(Long Short-Term Memory, LSTM)](https://wikidocs.net/22888)
 ### 논문
 [Contextualized Affect Representations for Emotion Recognition](https://aclanthology.org/D18-1404.pdf)
