@@ -344,9 +344,9 @@ Loss그래프에서 epoch가 지날 때마다 Train Loss가 감소하고, Valida
 ![last](https://github.com/subineda01/HY-AI-x-DeepLearnig/blob/main/image/15%EC%97%90%ED%8F%AD,2%EB%A0%88%EC%9D%B4%EC%96%B40.9005.png?raw=true)
 ```Accuracy : 0.9005```
 
-이외에도 정확도를 높이기 위해 여러가지 hyper parameter tuning을 시도하였으나, 더 이상 올라가지 않았기 때문에 다른 모델을 찾아보았다.
+이외에도 정확도를 높이기 위해 여러가지 hyper parameter tuning을 시도하였으나, 더 이상 올라가지 않았기 때문에 높은 성능을 보일 수 있는 다른 모델을 탐색하하였다.
 
-그래서 저희는 Bert를 사용하여 새로운 모델을 구성하였다. 
+그 결과 Bert를 사용하여 새로운 모델을 구성하였다. 
 
 ## 2. BertForSequenceClassification
 위 모델은 Hugging Face의 Transformer 라이브러리에서 제공하는 모델로 텍스트 분류 작업을 위해 설계된 BERT 기반 모델이이다. 이 모델은 BERT의 기본 아키텍쳐 위에 분류를 위한 추가 레이어를 포함하고 있다.
@@ -668,6 +668,7 @@ if __name__ == "__main__":
 ### Result
 
 ![image](https://github.com/subineda01/HY-AI-x-DeepLearnig/assets/144909753/cd90b260-6261-4686-971f-1b6c57635c0b)
+
 다양한 하이퍼파라미터를 가지고 실험을 해보았음. 학습률을 2e-3 2e-4 2e-r-5를 사용하여 실험 해본 결과 2e-5일 때의 성능이 제일 나았음. 에포크 수는  5 10 30을 가지고 실험 해본 결과 에포크 수가 커지면 커질수록 validation loss가 커짐을 확인 할 수 있었다. validation set에서는 에포크 1 이후로 더이상 학습을 잘 하지 못하는 것으로 보임.(학습을 시키지 않은 상태에서 모델에 validation.csv를 통과시킨 결과 0.135의 정확도가 나왔다. LLM이기 떄문에 1 epoch만으로 충분한 학습이 되었을 것으로 예측.) 따라서 에포크의 수를 늘리는 것은 과적합을 만든다고 판단하여 에포크 수를 작게 설정하였다. 마지막으로 배치 수를 16 32 64로 변경해 보았지만 큰 차이는 없었음. 결과적으로 정확도와 재현율이 모두 93%대를 기록하였다.
 
 최종 하이퍼 파리미터
@@ -679,7 +680,7 @@ LEARNING_RATE = 2e-5
 
 # IV. Conclusion: Discussion
 
-감정을 텍스트로부터 인식하는 데 있어 기존 방법들을 뛰어넘는 새로운 그래프 기반 알고리즘을 선보인다. 이 알고리즘은 감정이 표현되는 다양한 언어적 뉘앙스를 포착하고 모델링하기 위해 풍부한 구조적 설명자를 생성한다. 제안된 방법은 단어 임베딩을 통해 더욱 풍부해진 패턴 기반 표현을 사용하여 감정 인식 작업에서 뛰어난 성능을 보였준다.
+감정을 텍스트로부터 인식하는 두가지 모델을 제시하였다. 이 알고리즘은 감정이 표현되는 다양한 언어적 뉘앙스를 포착하고 모델링하기 위해 풍부한 구조적 설명자를 생성한다. 제안된 방법은 단어 임베딩을 통해 더욱 풍부해진 패턴 기반 표현을 사용하여 감정 인식 작업에서 뛰어난 성능을 보여주었다.
 
 위 모델을 통한 새로운 기술
 
@@ -717,8 +718,11 @@ LEARNING_RATE = 2e-5
 
 ### 블로그(Blog)
 [torch.nn.LSTM](https://pytorch.org/docs/stable/generated/torch.nn.LSTM.html)
+
 [pytorch로 RNN, LSTM 구현하기](https://justkode.kr/deep-learning/pytorch-rnn/)
+
 [08-02 장단기 메모리(Long Short-Term Memory, LSTM)](https://wikidocs.net/22888)
+
 ### 논문
 [Contextualized Affect Representations for Emotion Recognition](https://aclanthology.org/D18-1404.pdf)
 
