@@ -301,7 +301,7 @@ print(f'Test Accuracy: {test_accuracy}')
 
 ## Result
 
-Default parameter는 다음과 같이 설정하였습니다.
+Default parameter는 다음과 같이 설정하였다. 
 
 ```
 lstm_layer = 1
@@ -317,7 +317,7 @@ num_epochs = 10
 
 Loss그래프에서 epoch가 지날 때마다 Train Loss가 감소하고, Validation Loss 또한 유의미하게 감소하는 것을 확인할 수 있었다.
 
-하지만 감소의 정도가 크지 않고, 정확도 또한 59.4% 수준으로 높지 않았기 때문에 다음과 같은 parameter tuning을 진행하였다.
+하지만 감소의 정도가 크지 않고, 정확도 또한 59.4% 수준으로 높지 않았기 때문에 다음과 같은 hyper parameter tuning을 진행하였다.
 
 ### (1) learning_rate = 1e-2
 
@@ -344,24 +344,26 @@ Loss그래프에서 epoch가 지날 때마다 Train Loss가 감소하고, Valida
 ![last](https://github.com/subineda01/HY-AI-x-DeepLearnig/blob/main/image/15%EC%97%90%ED%8F%AD,2%EB%A0%88%EC%9D%B4%EC%96%B40.9005.png?raw=true)
 ```Accuracy : 0.9005```
 
-이외에도 정확도를 높이기 위해 여러가지 hyper parameter tuning을 시도하였으나, 더 이상 올라가지 않았기 때문에 높은 성능을 보일 수 있는 다른 모델을 탐색하하였다.
+이외에도 정확도를 높이기 위해 여러가지 hyper parameter tuning을 시도하였으나, 더 이상 올라가지 않았기 때문에 높은 성능을 보일 수 있는 다른 모델을 탐색하였다.
 
-그 결과 Bert를 사용하여 새로운 모델을 구성하였다. 
+그 결과 Bert를 사용한 새로운 모델을 구성하였다. 
 
 ## 2. BertForSequenceClassification
+BERT(Bidirectional Encoder Representations from Transformers)는 Goolge에서 개발한 자연어 처리 모델로, 2018년에 발표되었다. 텍스트의 문맥을 양방향으로 이해하는 데 뛰어나 더 뛰어난 성능을 지니고 있다. 
+BERT는 대규모 텍스트 코퍼스에서 학습되어 수억개의 단어를 학습하고 있다. 사전 학습된 이해도를 이용해 전이 학습을 진행하여 목적에 적합한 뛰어난 모델을 구성할 수 있다. 
 BertForSequenceClassification 모델은 Hugging Face의 Transformer 라이브러리에서 제공하는 텍스트 분류 작업을 위한 BERT 기반 모델이다. 이 모델은 BERT의 기본 아키텍처 위에 분류를 위한 추가 레이어를 포함하고 있다.
 
 전체구조
 
 ![image](https://github.com/subineda01/HY-AI-x-DeepLearnig/assets/144909753/18a71006-4452-4258-93b4-3a8a0c0ff3ab)
 
-모델은 크게 두가지 구조인 BertModel과 Classifier로 이루어져 있다. BertModel은 Transformer layer가 여러겹으로 쌓여있는 본체입니다. 이는 BertEmbedding 부분과 BertEncoder부분으로 나누어져 있다. 
+모델은 크게 두가지 구조인 BertModel과 Classifier로 이루어져 있다. BertModel은 Transformer layer가 여러겹으로 쌓여있는 본체이다. 이는 BertEmbedding 부분과 BertEncoder부분으로 나누어져 있다. 
 
 ### BertEmbedding
 
 ![image](https://github.com/subineda01/HY-AI-x-DeepLearnig/assets/144909753/589d2e7d-aeda-44d5-8a0c-9f73000fd8b6)
 
-BertEmbedding은 문장을 입력으로 받아 token, segment, position을 임베딩하여 값으로 만들고 더해서 반환해주는 역할을 한다.
+BertEmbedding은 문장을 입력으로 받아 토큰화 시키고 token, segment, position을 임베딩하여 값으로 만들고 더해서 반환해주는 역할을 한다.
 1. 토크나이징(Tokenization):
    * 입력 텍스트는 WordPiece 토크나이저를 통해 토큰으로 분해된다.
    * 토큰은 고유한 정수로 매핑된다.
@@ -373,7 +375,7 @@ BertEmbedding은 문장을 입력으로 받아 token, segment, position을 임�
 
 ### BertEncoder
 
-BERT는 트랜스포머(Transformer) 모델의 인코더 부분만 사용한다. 이는 여러 층의 인코더 블록으로 구성다.
+BERT는 트랜스포머(Transformer) 모델의 인코더 부분만 사용한다. 이는 여러 층의 인코더 블록으로 구성된다.
 
 #### 트랜스포머 인코더 개요
 
@@ -383,24 +385,24 @@ BERT의 인코더는 트랜스포머 인코더 블록의 스택으로 구성된�
    - Query, Key, Value 행렬을 계산하고, Attention 점수를 통해 토큰 쌍의 관계를 학습한다.
 
 2. Position-wise Feed-Forward Neural Network:
-   - 두 개의 선형 변환과 비선형 활성화 함수로 구성된 완전 연결 신경망
+   - 두 개의 선형 변환과 비선형 활성화 함수로 하여 완전 연결 신경망을 구성한다.
   
 ### simple example
 예를 들어, LSTM 모델에서도 입력 텍스트를 임베딩으로 변환하는 과정을 거친다. 이와 비슷하게, BERT 모델도 입력 텍스트를 토크나이즈하고 임베딩을 통해 벡터로 변환한다.
-
+```
 from transformers import BertTokenizer, BertForSequenceClassification
 
 tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
 model = BertForSequenceClassification.from_pretrained('bert-base-uncased')
-
-#### 예시 텍스트
+```
+#### 예시
+```
 text = "Hello, world!"
-
-#### 토크나이즈
+# 토크나이즈
 inputs = tokenizer(text, return_tensors='pt')
-
-#### 모델 출력
+# 모델 출력
 outputs = model(**inputs)
+```
 
 이와 같이 입력 텍스트를 토크나이즈하고 임베딩을 통해 모델에 입력하는 과정은 LSTM 모델에서의 임베딩 과정과 유사하다. BERT 모델은 이를 통해 입력 텍스트의 복잡한 관계를 학습하고, 텍스트 분류 작업을 수행할 수 있다.
 
@@ -418,13 +420,13 @@ Multi-Head Self-Attention 메커니즘은 각 토큰이 문장의 다른 모든 
   
    ![Attention Score](https://latex.codecogs.com/svg.latex?%5Ctext%7BAttention%7D(Q%2C%20K%2C%20V)%20%3D%20%5Ctext%7Bsoftmax%7D%5Cleft(%5Cfrac%7BQK%5ET%7D%7B%5Csqrt%7Bd_k%7D%7D%5Cright)V)
 
-- **Multi-Head Attention**: 여러 개의 어텐션 헤드를 사용하여 각 헤드의 출력을 결합
+- **Multi-Head Attention**: 여러 개의 어텐션 헤드를 사용하여 각 헤드의 출력을 결합시킨다.
   
    ![Multi-Head Attention](https://latex.codecogs.com/svg.latex?%5Ctext%7BMultiHead%7D(Q%2C%20K%2C%20V)%20%3D%20%5Ctext%7BConcat%7D(%5Ctext%7Bhead%7D_1%2C%20%5Cldots%2C%20%5Ctext%7Bhead%7D_h)W_O)
 
 ### Position-wise Feed-Forward Neural Network
 
-각 토큰에 대해 독립적으로 작동하는 두 개의 선형 변환과 비선형 활성화 함수로 구성된 완전 연결 신경망
+각 토큰에 대해 독립적으로 작동하는 두 개의 선형 변환과 비선형 활성화 함수로 완전 연결 신경망을 구성한다.
 
 ![Feed-Forward Neural Network](https://latex.codecogs.com/svg.latex?%5Ctext%7BFFN%7D(x)%20%3D%20%5Ctext%7Bmax%7D(0%2C%20xW_1%20%2B%20b_1)W_2%20%2B%20b_2)
 
@@ -703,8 +705,8 @@ if __name__ == "__main__":
 ### Word Cloud
 ![wordcloud](https://github.com/subineda01/HY-AI-x-DeepLearnig/assets/144909753/7c09d6b2-6d35-499e-829f-e3a0c45c03dc)
 
+word Cloud 이미지는 텍스트 데이터에서 단어들의 빈도나 중요도를 시각적으로 표현한다. 
 ### Loss Graph
-
 
 ![losses](https://github.com/subineda01/HY-AI-x-DeepLearnig/assets/144909753/877302d4-9837-4efa-a285-7cf732a61549)
 
@@ -716,7 +718,7 @@ if __name__ == "__main__":
 
 ![image](https://github.com/subineda01/HY-AI-x-DeepLearnig/assets/144909753/cd90b260-6261-4686-971f-1b6c57635c0b)
 
-다양한 하이퍼파라미터를 가지고 실험을 해보았음. 학습률을 2e-3 2e-4 2e-r-5를 사용하여 실험 해본 결과 2e-5일 때의 성능이 제일 나았음. 에포크 수는  5 10 30을 가지고 실험 해본 결과 에포크 수가 커지면 커질수록 validation loss가 커짐을 확인 할 수 있었다. validation set에서는 에포크 1 이후로 더이상 학습을 잘 하지 못하는 것으로 보임.(학습을 시키지 않은 상태에서 모델에 validation.csv를 통과시킨 결과 0.135의 정확도가 나왔다. LLM이기 떄문에 1 epoch만으로 충분한 학습이 되었을 것으로 예측.) 따라서 에포크의 수를 늘리는 것은 과적합을 만든다고 판단하여 에포크 수를 작게 설정하였다. 마지막으로 배치 수를 16 32 64로 변경해 보았지만 큰 차이는 없었음. 결과적으로 정확도와 재현율이 모두 93%대를 기록하였다.
+다양한 하이퍼파라미터를 가지고 실험을 하였다. 학습률을 2e-3 2e-4 2e-r-5를 사용하여 실험 해본 결과 2e-5일 때 가장 높은 성능을 기록하였다. 에포크 수는  5 10 30을 가지고 실험 해본 결과 에포크 수가 커지면 커질수록 validation loss가 커짐을 확인 할 수 있었다. validation set에서는 에포크 1 이후로 더이상 학습을 잘 하지 못하는 것으로 보인다.(학습을 시키지 않은 상태에서 모델에 validation.csv를 통과시킨 결과 0.135의 정확도가 나왔다. LLM이기 떄문에 1 epoch만으로 충분한 학습이 되었을 것으로 예측되었다.) 따라서 에포크의 수를 늘리는 것은 과적합을 만든다고 판단하여 에포크 수를 작게 설정하였다. 마지막으로 배치 수를 16 32 64로 변경해 보았지만 큰 차이는 없었고, 결과적으로 정확도와 재현율이 모두 93%대를 기록하였다.
 
 최종 하이퍼 파리미터
 ```
@@ -729,7 +731,7 @@ LEARNING_RATE = 2e-5
 
 감정을 텍스트로부터 인식하는 두가지 모델을 제시하였다. 이 알고리즘은 감정이 표현되는 다양한 언어적 뉘앙스를 포착하고 모델링하기 위해 풍부한 구조적 설명자를 생성한다. 제안된 방법은 단어 임베딩을 통해 더욱 풍부해진 패턴 기반 표현을 사용하여 감정 인식 작업에서 뛰어난 성능을 보여주었다.
 
-위 모델을 통한 새로운 기술
+<위 모델을 통한 새로운 기술>
 
 정신 건강 관리 시스템의 혁신
 조기 경고 시스템: 소셜 미디어와 온라인 활동을 실시간으로 모니터링하여 우울증, 불안 등의 정신 건강 문제를 조기에 경고할 수 있는 시스템을 개발할 수 있다.
