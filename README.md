@@ -419,6 +419,7 @@ Multi-Head Self-Attention 메커니즘은 각 토큰이 문장의 다른 모든 
 
 각 서브레이어 후에는 잔차 연결과 층 정규화를 적용하여 학습을 안정화하고 성능을 향상
 
+학습머신 : Intel(R) Xeon(R) Platinum 8462Y+ 메모리 1024GB
 ### Total code
 ```
 import os
