@@ -364,11 +364,8 @@ BertForSequenceClassification 모델은 Hugging Face의 Transformer 라이브러
 ![image](https://github.com/subineda01/HY-AI-x-DeepLearnig/assets/144909753/589d2e7d-aeda-44d5-8a0c-9f73000fd8b6)
 
 BertEmbedding은 문장을 입력으로 받아 토큰화 시키고 token, segment, position을 임베딩하여 값으로 만들고 더해서 반환해주는 역할을 한다.
-1. 토크나이징(Tokenization):
-   * 입력 텍스트는 WordPiece 토크나이저를 통해 토큰으로 분해된다.
-   * 토큰은 고유한 정수로 매핑된다.
-   * 예를 들어, "Hello, world!"를 [Hello, ,, world, !]로 분해한다.
-2. 입력 임베딩(Input Embeddings):
+
+입력 임베딩(Input Embeddings):
    * Token Embedding : 각 토큰에 대한 고유한 임베딩 벡터
    * Segment Embedding : 문장이 두개일 때 첫 문장과 두 번째 문당을 구분하기 위한 임베딩 벡터
    * Position Embedding : 각 토큰의 위치를 나타내는 임베딩 벡터. 문장 내에서 각 토큰의 순서를 모델이 알 수 있게 한다.
@@ -383,38 +380,25 @@ BERT의 인코더는 트랜스포머 인코더 블록의 스택으로 구성된�
 
 1. Multi-Head Self-Attention Mechanism:
    - Query, Key, Value 행렬을 계산하고, Attention 점수를 통해 토큰 쌍의 관계를 학습한다.
+   - ![QKV Calculation](https://latex.codecogs.com/svg.latex?Q%20%3D%20XW_Q%2C%20%5Cquad%20K%20%3D%20XW_K%2C%20%5Cquad%20V%20%3D%20XW_V)
 
 2. Position-wise Feed-Forward Neural Network:
    - 두 개의 선형 변환과 비선형 활성화 함수로 하여 완전 연결 신경망을 구성한다.
   
-### simple example
-예를 들어, LSTM 모델에서도 입력 텍스트를 임베딩으로 변환하는 과정을 거친다. 이와 비슷하게, BERT 모델도 입력 텍스트를 토크나이즈하고 임베딩을 통해 벡터로 변환한다.
-```
-from transformers import BertTokenizer, BertForSequenceClassification
+이와 같이 입력 텍스트를 토크나이즈하고 임베딩을 통해 모델에 입력하는 과정은 LSTM 모델에서의 임베딩 과정과 유사하다. BERT 모델 또한 이를 통해 입력 텍스트의 복잡한 관계를 학습하고, 텍스트 분류 작업을 수행한다.
 
-tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
-model = BertForSequenceClassification.from_pretrained('bert-base-uncased')
-```
-#### 예시
-```
-text = "Hello, world!"
-# 토크나이즈
-inputs = tokenizer(text, return_tensors='pt')
-# 모델 출력
-outputs = model(**inputs)
-```
+BERT 모델은 여러 개의 인코더 레이어로 구성되어 있다. 이 인코더 레이어들은 입력 임베딩을 점진적으로 더 복잡한 표현으로 변환하며, 최종적으로 입력 시퀸스의 각 토큰에 대한 풍부한 문맥 정보를 포함한 고차원 벡처 표현을 출력한다.   
 
-이와 같이 입력 텍스트를 토크나이즈하고 임베딩을 통해 모델에 입력하는 과정은 LSTM 모델에서의 임베딩 과정과 유사하다. BERT 모델은 이를 통해 입력 텍스트의 복잡한 관계를 학습하고, 텍스트 분류 작업을 수행할 수 있다.
+![Feed-Forward Neural Network](https://latex.codecogs.com/svg.latex?%5Ctext%7BFFN%7D(x)%20%3D%20%5Ctext%7Bmax%7D(0%2C%20xW_1%20%2B%20b_1)W_2%20%2B%20b_2)
 
-#### BERT 인코더 구성 요소
 
-##### Multi-Head Self-Attention
+3. 잔차 연결과 층 정규화 (Residual Connections and Layer Normalization)
 
-Multi-Head Self-Attention 메커니즘은 각 토큰이 문장의 다른 모든 토큰과의 관계를 학습할 수 있게 한다.
+각 트랜스포머 인코더 블록은 두 개의 서브레이어(Sublayer)로 구성되어 있다. 
+각 서브레이어 후에 잔차 연결과 층 정규화를 적용하여 학습을 안정화하고 성능을 향상시킨다. 
 
-- **Query, Key, Value 계산**: 입력 임베딩을 세 개의 행렬 \( W_Q \), \( W_K \), \( W_V \)에 곱하여 Query, Key, Value 행렬을 만든다.
-  
-   ![QKV Calculation](https://latex.codecogs.com/svg.latex?Q%20%3D%20XW_Q%2C%20%5Cquad%20K%20%3D%20XW_K%2C%20%5Cquad%20V%20%3D%20XW_V)
+
++)부가 설명
 
 - **어텐션 점수 계산**: Query와 Key의 내적을 통해 각 토큰 쌍의 점수를 계산하고, 이를 스케일링 후 소프트맥스 함수를 적용하여 가중치를 얻는다.
   
@@ -423,21 +407,6 @@ Multi-Head Self-Attention 메커니즘은 각 토큰이 문장의 다른 모든 
 - **Multi-Head Attention**: 여러 개의 어텐션 헤드를 사용하여 각 헤드의 출력을 결합시킨다.
   
    ![Multi-Head Attention](https://latex.codecogs.com/svg.latex?%5Ctext%7BMultiHead%7D(Q%2C%20K%2C%20V)%20%3D%20%5Ctext%7BConcat%7D(%5Ctext%7Bhead%7D_1%2C%20%5Cldots%2C%20%5Ctext%7Bhead%7D_h)W_O)
-
-### Position-wise Feed-Forward Neural Network
-
-각 토큰에 대해 독립적으로 작동하는 두 개의 선형 변환과 비선형 활성화 함수로 완전 연결 신경망을 구성한다.
-
-![Feed-Forward Neural Network](https://latex.codecogs.com/svg.latex?%5Ctext%7BFFN%7D(x)%20%3D%20%5Ctext%7Bmax%7D(0%2C%20xW_1%20%2B%20b_1)W_2%20%2B%20b_2)
-
-### 잔차 연결과 층 정규화 (Residual Connections and Layer Normalization)
-
-각 트랜스포머 인코더 블록은 두 개의 서브레이어(Sublayer)로 구성:
-
-1. **Self-Attention Sublayer**: Multi-Head Self-Attention을 적용
-2. **Feed-Forward Sublayer**: Position-wise Feed-Forward Neural Network를 적용
-
-각 서브레이어 후에는 잔차 연결과 층 정규화를 적용하여 학습을 안정화하고 성능을 향상
 
 학습머신 : Intel(R) Xeon(R) Platinum 8462Y+ 메모리 1024GB
 ### Total code
@@ -705,7 +674,8 @@ if __name__ == "__main__":
 ### Word Cloud
 ![wordcloud](https://github.com/subineda01/HY-AI-x-DeepLearnig/assets/144909753/7c09d6b2-6d35-499e-829f-e3a0c45c03dc)
 
-word Cloud 이미지는 텍스트 데이터에서 단어들의 빈도나 중요도를 시각적으로 표현한다. 
+word Cloud 이미지는 텍스트 데이터에서 단어들의 빈도나 중요도를 시각적으로 표현한다.
+
 ### Loss Graph
 
 ![losses](https://github.com/subineda01/HY-AI-x-DeepLearnig/assets/144909753/877302d4-9837-4efa-a285-7cf732a61549)
@@ -718,7 +688,7 @@ word Cloud 이미지는 텍스트 데이터에서 단어들의 빈도나 중요�
 
 ![image](https://github.com/subineda01/HY-AI-x-DeepLearnig/assets/144909753/cd90b260-6261-4686-971f-1b6c57635c0b)
 
-다양한 하이퍼파라미터를 가지고 실험을 하였다. 학습률을 2e-3 2e-4 2e-r-5를 사용하여 실험 해본 결과 2e-5일 때 가장 높은 성능을 기록하였다. 에포크 수는  5 10 30을 가지고 실험 해본 결과 에포크 수가 커지면 커질수록 validation loss가 커짐을 확인 할 수 있었다. validation set에서는 에포크 1 이후로 더이상 학습을 잘 하지 못하는 것으로 보인다.(학습을 시키지 않은 상태에서 모델에 validation.csv를 통과시킨 결과 0.135의 정확도가 나왔다. LLM이기 떄문에 1 epoch만으로 충분한 학습이 되었을 것으로 예측되었다.) 따라서 에포크의 수를 늘리는 것은 과적합을 만든다고 판단하여 에포크 수를 작게 설정하였다. 마지막으로 배치 수를 16 32 64로 변경해 보았지만 큰 차이는 없었고, 결과적으로 정확도와 재현율이 모두 93%대를 기록하였다.
+다양한 하이퍼파라미터를 가지고 실험하였다. 학습률을 2e-3 2e-4 2e-r-5를 사용하여 실험 해본 결과 2e-5일 때 가장 높은 성능을 기록하였다. 에포크 수는  5 10 30을 가지고 실험 해본 결과 에포크 수가 커지면 커질수록 validation loss가 커짐을 확인 할 수 있었다. validation set에서는 에포크 1 이후로 더이상 학습을 잘 하지 못하는 것으로 보인다.(학습을 시키지 않은 상태에서 모델에 validation.csv를 통과시킨 결과 0.135의 정확도가 나왔다. LLM이기 떄문에 1 epoch만으로 충분한 학습이 되었을 것으로 예측되었다.) 따라서 에포크의 수를 늘리는 것은 과적합을 만든다고 판단하여 에포크 수를 작게 설정하였다. 마지막으로 배치 수를 16 32 64로 변경해 보았지만 큰 차이는 없었고, 결과적으로 정확도와 재현율이 모두 93%대를 기록하였다.
 
 최종 하이퍼 파리미터
 ```
