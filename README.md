@@ -385,7 +385,7 @@ BERT의 인코더는 트랜스포머 인코더 블록의 스택으로 구성된�
 2. Position-wise Feed-Forward Neural Network:
    - 두 개의 선형 변환과 비선형 활성화 함수로 구성된 완전 연결 신경망
   
-#### simple example
+### simple example
 예를 들어, LSTM 모델에서도 입력 텍스트를 임베딩으로 변환하는 과정을 거친다. 이와 비슷하게, BERT 모델도 입력 텍스트를 토크나이즈하고 임베딩을 통해 벡터로 변환한다.
 
 from transformers import BertTokenizer, BertForSequenceClassification
