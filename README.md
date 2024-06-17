@@ -14,16 +14,15 @@ Members :
 🔍 목차
 1. Proposal
 2. DataSets
-3. Methodology
-4. Evaluation & Analysis
-5. Conclusion-discussion
-6. Related Works
+3. Methodology & Evaluation
+4. Conclusion-discussion
+5. Related Works
 
 -------------------------
 # I.Proposal
 - Why are you doing this?
 
-딥러닝을 이용한 감정 인식 기술은 우리가 미처 알지 못했던 인간의 감정 패턴과 심리 상태를 더 깊이 이해할 수 있게 해줍니다. 이러한 감정 분류 시스템을 통해 개인적인 측면으로는 사람들의 온라인 활동과 소셜 미디어 게시물에서 감정을 분석하여 우울증, 불안, 스트레스 등으 정신 건강 문제를 조기에 발견 가능하게 해준다. 또한, 인공지능 비서나 교육용 로봇 등을 통해 학업적으로나 사무적인 효과를 극대화시키고, 인간-컴퓨터 상호작용(HCI)을 크게 향상시킬 수 있다. 사회적인 측면으로는 기업들이 고객 서비스에서 감정 인식 기술을 통해 고객의 감정 상태를 실시간으로 파악하여, 피드백 수용이 용이하다. 소셜 미디어에서 발생하는 혐오 발언이나 사이버 불링을 감지하여, 이를 사전에 방지함으로써 사회적 문제를 해결하는 수단으로 사용될 수 있다. 결론적으로, 딥러닝을 이용한 감정 인식 연구는 다양한 사회적, 학문적, 경제적 이점을 제공하며, 인류의 삶을 더 나은 방향으로 이끌어갈 수 있는 잠재력을 가지고 있다. 이러한 연구를 지속하고 발전시키는 것은 우리의 삶의 질을 향상시키고, 더 나은 사회를 만드는 데 중요한 역할을 할 것이라 판단하여 선정하게 되었다.
+    딥러닝을 이용한 감정 인식 기술은 우리가 미처 알지 못했던 인간의 감정 패턴과 심리 상태를 더 깊이 이해할 수 있게 해줍니다. 이러한 감정 분류 시스템을 통해 개인적인 측면으로는 사람들의 온라인 활동과 소셜 미디어 게시물에서 감정을 분석하여 우울증, 불안, 스트레스 등으 정신 건강 문제를 조기에 발견 가능하게 해준다. 또한, 인공지능 비서나 교육용 로봇 등을 통해 학업적으로나 사무적인 효과를 극대화시키고, 인간-컴퓨터 상호작용(HCI)을 크게 향상시킬 수 있다. 사회적인 측면으로는 기업들이 고객 서비스에서 감정 인식 기술을 통해 고객의 감정 상태를 실시간으로 파악하여, 피드백 수용이 용이하다. 소셜 미디어에서 발생하는 혐오 발언이나 사이버 불링을 감지하여, 이를 사전에 방지함으로써 사회적 문제를 해결하는 수단으로 사용될 수 있다. 결론적으로, 딥러닝을 이용한 감정 인식 연구는 다양한 사회적, 학문적, 경제적 이점을 제공하며, 인류의 삶을 더 나은 방향으로 이끌어갈 수 있는 잠재력을 가지고 있다. 이러한 연구를 지속하고 발전시키는 것은 우리의 삶의 질을 향상시키고, 더 나은 사회를 만드는 데 중요한 역할을 할 것이라 판단하여 선정하게 되었다.
 
 - What do you want to see at the end?
 
@@ -76,7 +75,7 @@ train.csv(16,000), validation.csv(2,000), test.csv(2,000)
 
 
 -----------------------
-# III.Methodology
+# III.Methodology & Evaluation
 ## 1. Lstm classification
     
 문장과 같은 시계열 데이터를 처리하기 위해서는 주로 RNN(순환신경망, Recurrent Neural Network)을 사용한다.
@@ -348,6 +347,8 @@ Loss그래프에서 epoch가 지날 때마다 Train Loss가 감소하고, Valida
 
 그 결과 Bert를 사용한 새로운 모델을 구성하였다. 
 
+-----------------------
+
 ## 2. BertForSequenceClassification
 BERT(Bidirectional Encoder Representations from Transformers)는 Goolge에서 개발한 자연어 처리 모델로, 2018년에 발표되었다. 텍스트의 문맥을 양방향으로 이해하는 데 뛰어나 더 뛰어난 성능을 지니고 있다. 
 BERT는 대규모 텍스트 코퍼스에서 학습되어 수억개의 단어를 학습하고 있다. 사전 학습된 이해도를 이용해 전이 학습을 진행하여 목적에 적합한 뛰어난 모델을 구성할 수 있다. 
@@ -380,10 +381,12 @@ BERT의 인코더는 트랜스포머 인코더 블록의 스택으로 구성된�
 
 1. Multi-Head Self-Attention Mechanism:
    - Query, Key, Value 행렬을 계산하고, Attention 점수를 통해 토큰 쌍의 관계를 학습한다.
+     
 ![QKV Calculation](https://latex.codecogs.com/svg.latex?Q%20%3D%20XW_Q%2C%20%5Cquad%20K%20%3D%20XW_K%2C%20%5Cquad%20V%20%3D%20XW_V)
 
 2. Position-wise Feed-Forward Neural Network:
    - 두 개의 선형 변환과 비선형 활성화 함수로 하여 완전 연결 신경망을 구성한다.
+     
 ![Feed-Forward Neural Network](https://latex.codecogs.com/svg.latex?%5Ctext%7BFFN%7D(x)%20%3D%20%5Ctext%7Bmax%7D(0%2C%20xW_1%20%2B%20b_1)W_2%20%2B%20b_2)
   
 이와 같이 입력 텍스트를 토크나이즈하고 임베딩을 통해 모델에 입력하는 과정은 LSTM 모델에서의 임베딩 과정과 유사하다. BERT 모델 또한 이를 통해 입력 텍스트의 복잡한 관계를 학습하고, 텍스트 분류 작업을 수행한다.
@@ -410,8 +413,8 @@ BERT의 인코더는 트랜스포머 인코더 블록의 스택으로 구성된�
 
 학습머신 : Intel(R) Xeon(R) Platinum 8462Y+ 메모리 1024GB
 ### Total code
-```
-1. 환경 설정 및 라이브러리 로드
+```python
+#1. 환경 설정 및 라이브러리 로드
 import os
 import logging
 
@@ -430,8 +433,8 @@ import matplotlib.pyplot as plt
 from wordcloud import WordCloud
 from collections import Counter
 
-2. 데이터셋 클래스 정의
-EmotionDataset 클래스는 데이터셋을 관리하고, BERT 모델이 요구하는 형식으로 데이터를 변환
+#2. 데이터셋 클래스 정의
+#EmotionDataset 클래스는 데이터셋을 관리하고, BERT 모델이 요구하는 형식으로 데이터를 변환
 
 class EmotionDataset(Dataset):
     def __init__(self, texts, labels, tokenizer, max_len):
@@ -463,8 +466,8 @@ class EmotionDataset(Dataset):
             'label': torch.tensor(label, dtype=torch.long)
         }
 
-3. 데이터 로드 및 데이터 로더 생성
-CSV 파일에서 데이터를 로드하고, 데이터 로더를 생성하는 함수들
+#3. 데이터 로드 및 데이터 로더 생성
+#CSV 파일에서 데이터를 로드하고, 데이터 로더를 생성하는 함수들
 
 def load_data(file_path):
     logging.debug(f"Loading data from {file_path}")
@@ -484,8 +487,8 @@ def create_data_loader(texts, labels, tokenizer, max_len, batch_size):
     )
     return DataLoader(ds, batch_size=batch_size, num_workers=2)
 
-4. 모델 학습 함수
-이 함수는 모델을 학습시키고, 각 에포크(epoch)마다 손실(loss)을 기록
+#4. 모델 학습 함수
+#이 함수는 모델을 학습시키고, 각 에포크(epoch)마다 손실(loss)을 기록
 
 def train_model(train_loader, val_loader, model, device, optimizer, scheduler, num_epochs):
     model = model.to(device)
@@ -536,8 +539,8 @@ def train_model(train_loader, val_loader, model, device, optimizer, scheduler, n
 
     return train_losses, val_losses
 
-5. 손실 그래프 그리기
-학습 및 검증 손실을 그래프로 나타낸다.
+#5. 손실 그래프 그리기
+#학습 및 검증 손실을 그래프로 나타낸다.
 
 def plot_losses(train_losses, val_losses, filename='losses.png'):
     plt.figure(figsize=(10, 8))
@@ -550,8 +553,8 @@ def plot_losses(train_losses, val_losses, filename='losses.png'):
     plt.savefig(filename)
     plt.close()
 
-6. 모델 평가 함수
-모델을 평가하고, 정확도, 정밀도, 재현율, F1 점수 및 혼동 행렬을 계산
+#6. 모델 평가 함수
+#모델을 평가하고, 정확도, 정밀도, 재현율, F1 점수 및 혼동 행렬을 계산
 
 def evaluate_model(model, data_loader, device):
     model.eval()
@@ -573,8 +576,8 @@ def evaluate_model(model, data_loader, device):
     cm = confusion_matrix(true_labels, predictions)
     return accuracy, precision, recall, f1, cm
 
-7. 혼동 행렬 그리기
-혼동 행렬을 시각
+#7. 혼동 행렬 그리기
+#혼동 행렬을 시각
 
 def plot_confusion_matrix(cm, class_names, filename='confusion_matrix.png'):
     fig, ax = plt.subplots(figsize=(10, 8))
@@ -585,8 +588,8 @@ def plot_confusion_matrix(cm, class_names, filename='confusion_matrix.png'):
     plt.savefig(filename)
     plt.close()
 
-8. 워드 클라우드 생성
-텍스트 데이터를 기반으로 워드 클라우드를 생성
+#8. 워드 클라우드 생성
+#텍스트 데이터를 기반으로 워드 클라우드를 생성
 
 def generate_wordcloud(text, filename='wordcloud.png'):
     wordcloud = WordCloud(width=800, height=400, background_color='white').generate(text)
@@ -596,8 +599,8 @@ def generate_wordcloud(text, filename='wordcloud.png'):
     plt.savefig(filename)
     plt.close()
 
-9. 메인 함수
-전체 파이프라인을 실행하는 메인 함수
+#9. 메인 함수
+#전체 파이프라인을 실행하는 메인 함수
 
 def main():
     try:
@@ -696,6 +699,7 @@ BATCH_SIZE = 16
 EPOCHS = 5
 LEARNING_RATE = 2e-5
 ```
+-----------------------
 
 # IV. Conclusion: Discussion
 
@@ -707,39 +711,41 @@ LSTM 약 90%, BERT 약 93%로 꽤 준수한 정확도를 기록하였지만, 성
 
 <위 모델을 통한 새로운 기술>
 
-정신 건강 관리 시스템의 혁신
+- 정신 건강 관리 시스템의 혁신
 
 조기 경고 시스템: 소셜 미디어와 온라인 활동을 실시간으로 모니터링하여 우울증, 불안 등의 정신 건강 문제를 조기에 경고할 수 있는 시스템을 개발할 수 있다.
 개인 맞춤형 치료 계획: 감정 인식 데이터를 기반으로 개인 맞춤형 치료 계획을 세우고, 정기적으로 환자의 감정 상태를 모니터링하여 치료의 효과를 극대화할 수 있다.
 
-고객 서비스 및 사용자 경험 향상
+ - 고객 서비스 및 사용자 경험 향상
 
 실시간 감정 분석: 고객의 감정을 실시간으로 분석하여 즉각적인 대응을 통해 고객 만족도를 높일 수 있다.
 개인화된 서비스 제공: 고객의 감정 상태에 기반한 맞춤형 서비스 제공으로 고객 충성도를 높일 수 있다.
 
-인간-컴퓨터 상호작용 개선
+ - 인간-컴퓨터 상호작용 개선
 
 감정 반응 AI 비서: 감정을 이해하고 반응하는 AI 비서나 로봇을 개발하여 사용자와의 상호작용을 더욱 자연스럽고 인간적으로 만들 수 있다.
 교육 및 엔터테인먼트 분야: 감정을 이해하는 교육용 로봇이나 엔터테인먼트 시스템을 통해 학습 효과를 극대화하고 사용자 경험을 향상시킬 수 있다.
 
-사회적 문제 해결
+ - 사회적 문제 해결
 
 사이버 불링 및 혐오 발언 감지: 소셜 미디어에서 사이버 불링이나 혐오 발언을 실시간으로 감지하여 사전 예방 조치를 취할 수 있다.
 사회적 트렌드 분석: 대규모 데이터를 분석하여 사회적 트렌드와 감정 변화를 파악하고, 이를 기반으로 효과적인 정책 수립을 지원할 수 있다.
 
-상용화 및 성공 가능성
+<상용화 및 성공 가능성>
 
 딥러닝 기반 감정 인식 기술은 다음과 같은 이유로 상용화와 성공 가능성이 높다.
 
-다양한 적용 분야: 정신 건강, 고객 서비스, HCI, 사회적 문제 해결 등 다양한 분야에서 활용 가능성이 높아 시장 수요가 크다.
+ - 다양한 적용 분야: 정신 건강, 고객 서비스, HCI, 사회적 문제 해결 등 다양한 분야에서 활용 가능성이 높아 시장 수요가 크다.
 
-기술의 정밀도 및 신뢰성: CARER 알고리즘의 높은 정확도와 신뢰성으로 인해 실질적인 문제 해결에 기여할 수 있다.
+ - 기술의 정밀도 및 신뢰성: CARER 알고리즘의 높은 정확도와 신뢰성으로 인해 실질적인 문제 해결에 기여할 수 있다.
 
-기술의 유연성: 이 기술은 여러 언어와 문화적 맥락에서도 적용 가능하여 글로벌 시장에서도 활용될 수 있다.
+ - 기술의 유연성: 이 기술은 여러 언어와 문화적 맥락에서도 적용 가능하여 글로벌 시장에서도 활용될 수 있다.
 
-지속적인 발전 가능성: 딥러닝과 그래프 기반 방법의 발전으로 기술이 지속적으로 개선될 수 있어 장기적인 성장 가능성이 높다.
+ - 지속적인 발전 가능성: 딥러닝과 그래프 기반 방법의 발전으로 기술이 지속적으로 개선될 수 있어 장기적인 성장 가능성이 높다.
 
 딥러닝 기반 감정 인식 기술은 여러 산업 분야에서 혁신적인 변화를 가져올 수 있는 잠재력을 가지고 있다. 이 기술은 정신 건강 관리, 고객 서비스, 인간-컴퓨터 상호작용, 사회적 문제 해결 등 다양한 분야에서 실질적인 변화를 이끌어낼 수 있다. 또한, 상용화 가능성이 높고, 다양한 새로운 기술로 발전할 수 있는 가능성이 크다. 앞으로도 지속적인 연구와 발전을 통해 인류의 삶의 질을 향상시키고, 더 나은 사회를 만드는 데 중요한 역할을 할 것이다.
+
+-----------------------
 
 # V. Related Works & References
 
@@ -766,10 +772,14 @@ collections
 
 [08-02 장단기 메모리(Long Short-Term Memory, LSTM)](https://wikidocs.net/22888)
 
+[BERT(huggingface)](https://huggingface.co/transformers/v3.0.2/model_doc/bert.html)
+
 ### 논문
 [Contextualized Affect Representations for Emotion Recognition](https://aclanthology.org/D18-1404.pdf)
 
 [CARER: Contextualized Affect Representations for Emotion Recognition](https://aclanthology.org/D18-1404.pdf)
+
+[BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding](https://arxiv.org/pdf/1810.04805)
 
 
 
