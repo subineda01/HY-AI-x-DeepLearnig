@@ -393,13 +393,13 @@ from transformers import BertTokenizer, BertForSequenceClassification
 tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
 model = BertForSequenceClassification.from_pretrained('bert-base-uncased')
 
-# 예시 텍스트
+#### 예시 텍스트
 text = "Hello, world!"
 
-# 토크나이즈
+#### 토크나이즈
 inputs = tokenizer(text, return_tensors='pt')
 
-# 모델 출력
+#### 모델 출력
 outputs = model(**inputs)
 
 이와 같이 입력 텍스트를 토크나이즈하고 임베딩을 통해 모델에 입력하는 과정은 LSTM 모델에서의 임베딩 과정과 유사하다. BERT 모델은 이를 통해 입력 텍스트의 복잡한 관계를 학습하고, 텍스트 분류 작업을 수행할 수 있다.
@@ -695,10 +695,10 @@ def main():
 if __name__ == "__main__":
     main()
 ```
-데이터 로드 및 전처리: CSV 파일에서 데이터를 로드하고, BERT의 입력 형식에 맞게 토크나이즈한다.
-모델 학습: 학습 데이터를 사용하여 BERT 모델을 학습시키고, 각 에포크마다 손실을 기록한다.
-모델 평가: 테스트 데이터를 사용하여 모델을 평가하고, 정확도, 정밀도, 재현율, F1 점수 및 혼동 행렬을 계산한다.
-시각화: 손실 그래프, 혼동 행렬, 워드 클라우드를 시각화한다.
+- 데이터 로드 및 전처리: CSV 파일에서 데이터를 로드하고, BERT의 입력 형식에 맞게 토크나이즈한다.
+- 모델 학습: 학습 데이터를 사용하여 BERT 모델을 학습시키고, 각 에포크마다 손실을 기록한다.
+- 모델 평가: 테스트 데이터를 사용하여 모델을 평가하고, 정확도, 정밀도, 재현율, F1 점수 및 혼동 행렬을 계산한다.
+- 시각화: 손실 그래프, 혼동 행렬, 워드 클라우드를 시각화한다.
 
 ### Word Cloud
 ![wordcloud](https://github.com/subineda01/HY-AI-x-DeepLearnig/assets/144909753/7c09d6b2-6d35-499e-829f-e3a0c45c03dc)
