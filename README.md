@@ -374,23 +374,21 @@ BertEmbedding은 문장을 입력으로 받아 토큰화 시키고 token, segmen
 
 BERT는 트랜스포머(Transformer) 모델의 인코더 부분만 사용한다. 이는 여러 층의 인코더 블록으로 구성된다.
 
-#### 트랜스포머 인코더 개요
+#### - 트랜스포머 인코더 개요
 
 BERT의 인코더는 트랜스포머 인코더 블록의 스택으로 구성된다. 트랜스포머 인코더는 여러 층의 인코더 블록으로 구성되며, 각 블록은 다음 두 가지 주요 구성 요소로 이루어져 있다.
 
 1. Multi-Head Self-Attention Mechanism:
    - Query, Key, Value 행렬을 계산하고, Attention 점수를 통해 토큰 쌍의 관계를 학습한다.
-   - ![QKV Calculation](https://latex.codecogs.com/svg.latex?Q%20%3D%20XW_Q%2C%20%5Cquad%20K%20%3D%20XW_K%2C%20%5Cquad%20V%20%3D%20XW_V)
+![QKV Calculation](https://latex.codecogs.com/svg.latex?Q%20%3D%20XW_Q%2C%20%5Cquad%20K%20%3D%20XW_K%2C%20%5Cquad%20V%20%3D%20XW_V)
 
 2. Position-wise Feed-Forward Neural Network:
    - 두 개의 선형 변환과 비선형 활성화 함수로 하여 완전 연결 신경망을 구성한다.
+![Feed-Forward Neural Network](https://latex.codecogs.com/svg.latex?%5Ctext%7BFFN%7D(x)%20%3D%20%5Ctext%7Bmax%7D(0%2C%20xW_1%20%2B%20b_1)W_2%20%2B%20b_2)
   
 이와 같이 입력 텍스트를 토크나이즈하고 임베딩을 통해 모델에 입력하는 과정은 LSTM 모델에서의 임베딩 과정과 유사하다. BERT 모델 또한 이를 통해 입력 텍스트의 복잡한 관계를 학습하고, 텍스트 분류 작업을 수행한다.
 
-BERT 모델은 여러 개의 인코더 레이어로 구성되어 있다. 이 인코더 레이어들은 입력 임베딩을 점진적으로 더 복잡한 표현으로 변환하며, 최종적으로 입력 시퀸스의 각 토큰에 대한 풍부한 문맥 정보를 포함한 고차원 벡처 표현을 출력한다.   
-
-![Feed-Forward Neural Network](https://latex.codecogs.com/svg.latex?%5Ctext%7BFFN%7D(x)%20%3D%20%5Ctext%7Bmax%7D(0%2C%20xW_1%20%2B%20b_1)W_2%20%2B%20b_2)
-
+이 인코더 레이어들은 입력 임베딩을 점진적으로 더 복잡한 표현으로 변환하며, 최종적으로 입력 시퀸스의 각 토큰에 대한 풍부한 문맥 정보를 포함한 고차원 벡터 표현을 출력한다.   
 
 3. 잔차 연결과 층 정규화 (Residual Connections and Layer Normalization)
 
@@ -407,6 +405,8 @@ BERT 모델은 여러 개의 인코더 레이어로 구성되어 있다. 이 인
 - **Multi-Head Attention**: 여러 개의 어텐션 헤드를 사용하여 각 헤드의 출력을 결합시킨다.
   
    ![Multi-Head Attention](https://latex.codecogs.com/svg.latex?%5Ctext%7BMultiHead%7D(Q%2C%20K%2C%20V)%20%3D%20%5Ctext%7BConcat%7D(%5Ctext%7Bhead%7D_1%2C%20%5Cldots%2C%20%5Ctext%7Bhead%7D_h)W_O)
+
+위의 원리를 활용한```BertForSequenceClassification```라이브러리를 사용하여 분류 모델을 생성하였다. 
 
 학습머신 : Intel(R) Xeon(R) Platinum 8462Y+ 메모리 1024GB
 ### Total code
