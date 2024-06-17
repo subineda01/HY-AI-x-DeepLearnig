@@ -349,7 +349,7 @@ Loss그래프에서 epoch가 지날 때마다 Train Loss가 감소하고, Valida
 그 결과 Bert를 사용하여 새로운 모델을 구성하였다. 
 
 ## 2. BertForSequenceClassification
-위 모델은 Hugging Face의 Transformer 라이브러리에서 제공하는 모델로 텍스트 분류 작업을 위해 설계된 BERT 기반 모델이이다. 이 모델은 BERT의 기본 아키텍쳐 위에 분류를 위한 추가 레이어를 포함하고 있다.
+BertForSequenceClassification 모델은 Hugging Face의 Transformer 라이브러리에서 제공하는 텍스트 분류 작업을 위한 BERT 기반 모델이다. 이 모델은 BERT의 기본 아키텍처 위에 분류를 위한 추가 레이어를 포함하고 있다.
 
 전체구조
 
@@ -365,6 +365,7 @@ BertEmbedding은 문장을 입력으로 받아 token, segment, position을 임�
 1. 토크나이징(Tokenization):
    * 입력 텍스트는 WordPiece 토크나이저를 통해 토큰으로 분해된다.
    * 토큰은 고유한 정수로 매핑된다.
+   * 예를 들어, "Hello, world!"를 [Hello, ,, world, !]로 분해한다.
 2. 입력 임베딩(Input Embeddings):
    * Token Embedding : 각 토큰에 대한 고유한 임베딩 벡터
    * Segment Embedding : 문장이 두개일 때 첫 문장과 두 번째 문당을 구분하기 위한 임베딩 벡터
@@ -372,19 +373,36 @@ BertEmbedding은 문장을 입력으로 받아 token, segment, position을 임�
 
 ### BertEncoder
 
-BERT는 트랜스포머(Transformer) 모델의 인코더 부분만 사용한다.
+BERT는 트랜스포머(Transformer) 모델의 인코더 부분만 사용한다. 이는 여러 층의 인코더 블록으로 구성다.
 
 #### 트랜스포머 인코더 개요
 
 BERT의 인코더는 트랜스포머 인코더 블록의 스택으로 구성된다. 트랜스포머 인코더는 여러 층의 인코더 블록으로 구성되며, 각 블록은 다음 두 가지 주요 구성 요소로 이루어져 있다.
 
 1. Multi-Head Self-Attention Mechanism:
-   - 각 토큰이 다른 모든 토큰과의 관계(주의 메커니즘)를 학습할 수 있게 한다.
-   - 다양한 주의(attention) 헤드를 사용하여 서로 다른 부분에 집중할 수 있다.
+   - Query, Key, Value 행렬을 계산하고, Attention 점수를 통해 토큰 쌍의 관계를 학습한다.
 
 2. Position-wise Feed-Forward Neural Network:
-   - Self-attention의 출력을 각 토큰에 대해 독립적으로 처리하는 완전 연결 네트워크
-   - 비선형 활성화 함수를 사용하여 복잡한 표현을 학습
+   - 두 개의 선형 변환과 비선형 활성화 함수로 구성된 완전 연결 신경망
+  
+#### simple example
+예를 들어, LSTM 모델에서도 입력 텍스트를 임베딩으로 변환하는 과정을 거친다. 이와 비슷하게, BERT 모델도 입력 텍스트를 토크나이즈하고 임베딩을 통해 벡터로 변환한다.
+
+from transformers import BertTokenizer, BertForSequenceClassification
+
+tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
+model = BertForSequenceClassification.from_pretrained('bert-base-uncased')
+
+# 예시 텍스트
+text = "Hello, world!"
+
+# 토크나이즈
+inputs = tokenizer(text, return_tensors='pt')
+
+# 모델 출력
+outputs = model(**inputs)
+
+이와 같이 입력 텍스트를 토크나이즈하고 임베딩을 통해 모델에 입력하는 과정은 LSTM 모델에서의 임베딩 과정과 유사하다. BERT 모델은 이를 통해 입력 텍스트의 복잡한 관계를 학습하고, 텍스트 분류 작업을 수행할 수 있다.
 
 #### BERT 인코더 구성 요소
 
@@ -422,6 +440,7 @@ Multi-Head Self-Attention 메커니즘은 각 토큰이 문장의 다른 모든 
 학습머신 : Intel(R) Xeon(R) Platinum 8462Y+ 메모리 1024GB
 ### Total code
 ```
+1. 환경 설정 및 라이브러리 로드
 import os
 import logging
 
@@ -439,6 +458,9 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from wordcloud import WordCloud
 from collections import Counter
+
+2. 데이터셋 클래스 정의
+EmotionDataset 클래스는 데이터셋을 관리하고, BERT 모델이 요구하는 형식으로 데이터를 변환
 
 class EmotionDataset(Dataset):
     def __init__(self, texts, labels, tokenizer, max_len):
@@ -470,6 +492,9 @@ class EmotionDataset(Dataset):
             'label': torch.tensor(label, dtype=torch.long)
         }
 
+3. 데이터 로드 및 데이터 로더 생성
+CSV 파일에서 데이터를 로드하고, 데이터 로더를 생성하는 함수들
+
 def load_data(file_path):
     logging.debug(f"Loading data from {file_path}")
     df = pd.read_csv(file_path)
@@ -487,6 +512,9 @@ def create_data_loader(texts, labels, tokenizer, max_len, batch_size):
         max_len=max_len
     )
     return DataLoader(ds, batch_size=batch_size, num_workers=2)
+
+4. 모델 학습 함수
+이 함수는 모델을 학습시키고, 각 에포크(epoch)마다 손실(loss)을 기록
 
 def train_model(train_loader, val_loader, model, device, optimizer, scheduler, num_epochs):
     model = model.to(device)
@@ -537,6 +565,9 @@ def train_model(train_loader, val_loader, model, device, optimizer, scheduler, n
 
     return train_losses, val_losses
 
+5. 손실 그래프 그리기
+학습 및 검증 손실을 그래프로 나타낸다.
+
 def plot_losses(train_losses, val_losses, filename='losses.png'):
     plt.figure(figsize=(10, 8))
     plt.plot(train_losses, label='Train Loss')
@@ -547,6 +578,9 @@ def plot_losses(train_losses, val_losses, filename='losses.png'):
     plt.title('Train and Validation Loss per Epoch')
     plt.savefig(filename)
     plt.close()
+
+6. 모델 평가 함수
+모델을 평가하고, 정확도, 정밀도, 재현율, F1 점수 및 혼동 행렬을 계산
 
 def evaluate_model(model, data_loader, device):
     model.eval()
@@ -568,6 +602,9 @@ def evaluate_model(model, data_loader, device):
     cm = confusion_matrix(true_labels, predictions)
     return accuracy, precision, recall, f1, cm
 
+7. 혼동 행렬 그리기
+혼동 행렬을 시각
+
 def plot_confusion_matrix(cm, class_names, filename='confusion_matrix.png'):
     fig, ax = plt.subplots(figsize=(10, 8))
     sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', xticklabels=class_names, yticklabels=class_names)
@@ -577,6 +614,9 @@ def plot_confusion_matrix(cm, class_names, filename='confusion_matrix.png'):
     plt.savefig(filename)
     plt.close()
 
+8. 워드 클라우드 생성
+텍스트 데이터를 기반으로 워드 클라우드를 생성
+
 def generate_wordcloud(text, filename='wordcloud.png'):
     wordcloud = WordCloud(width=800, height=400, background_color='white').generate(text)
     plt.figure(figsize=(10, 8))
@@ -584,6 +624,9 @@ def generate_wordcloud(text, filename='wordcloud.png'):
     plt.axis('off')
     plt.savefig(filename)
     plt.close()
+
+9. 메인 함수
+전체 파이프라인을 실행하는 메인 함수
 
 def main():
     try:
@@ -652,6 +695,10 @@ def main():
 if __name__ == "__main__":
     main()
 ```
+데이터 로드 및 전처리: CSV 파일에서 데이터를 로드하고, BERT의 입력 형식에 맞게 토크나이즈한다.
+모델 학습: 학습 데이터를 사용하여 BERT 모델을 학습시키고, 각 에포크마다 손실을 기록한다.
+모델 평가: 테스트 데이터를 사용하여 모델을 평가하고, 정확도, 정밀도, 재현율, F1 점수 및 혼동 행렬을 계산한다.
+시각화: 손실 그래프, 혼동 행렬, 워드 클라우드를 시각화한다.
 
 ### Word Cloud
 ![wordcloud](https://github.com/subineda01/HY-AI-x-DeepLearnig/assets/144909753/7c09d6b2-6d35-499e-829f-e3a0c45c03dc)
