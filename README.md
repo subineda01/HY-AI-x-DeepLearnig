@@ -342,6 +342,9 @@ Loss그래프에서 epoch가 지날 때마다 Train Loss가 감소하고, Valida
 ![last](https://github.com/subineda01/HY-AI-x-DeepLearnig/blob/main/image/15%EC%97%90%ED%8F%AD,2%EB%A0%88%EC%9D%B4%EC%96%B40.9005.png?raw=true)
 ```Accuracy : 0.9005```
 
+```lstm_layer = 2, num_epochs = 15```으로 설정하여 약 90%의 정확도를 가진 모델을 학습시킬 수 있었다. 
+
+
 이외에도 정확도를 높이기 위해 여러가지 hyper parameter tuning을 시도하였으나, 더 이상 올라가지 않았기 때문에 높은 성능을 보일 수 있는 다른 모델을 탐색하였다.
 
 그 결과 Bert를 사용한 새로운 모델을 구성하였다. 
