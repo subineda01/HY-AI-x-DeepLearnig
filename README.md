@@ -1,13 +1,13 @@
 # 딥러닝 기반 텍스트의 감정 분석
 Members : 
 
-이가빈, 화학과, gabin0713@hanyang.ac.kr
+이가빈, 화학과, gabin0713@hanyang.ac.kr , (블로그 작성 및 관리)
 
-장수빈, 수학과, subineda01@hanyang.ac.kr
+장수빈, 수학과, subineda01@hanyang.ac.kr , (Bert모델 학습, 블로그 작성)
 
-박승현, 경영학부, boyojeck@hanyang.ac.kr
+박승현, 경영학부, boyojeck@hanyang.ac.kr , (데이터셋 선정, LSTM모델 학습, 블로그 작성, 영상촬영)
 
-이상백, 기계공학부, leesangbaek98@naver.com
+이상백, 기계공학부, leesangbaek98@naver.com , (영상 촬영)
 
 
 
@@ -20,7 +20,7 @@ Members :
 
 -------------------------
 # youtube
-(https://youtu.be/GfqGOEEfuiw?si=_NrEFK5RxKZ05oA2)
+()
 
 # I.Proposal
 - Why are you doing this?
@@ -48,9 +48,7 @@ Data link : <https://github.com/dair-ai/emotion_dataset>
 train.csv(16,000), validation.csv(2,000), test.csv(2,000)
 -> 총 20,000개의 데이터 (1968KB)
 
-<train.csv의 데이터 그래프>
 
-<img src="https://github.com/subineda01/HY-AI-x-DeepLearnig/blob/main/image/distribution%20of%20label.png?raw=true" width="500" height="500"/>
 
 ## Data example
 ```sh
@@ -71,7 +69,9 @@ train.csv(16,000), validation.csv(2,000), test.csv(2,000)
 | fear | 4 |
 | surprise | 5 |
 
+<train.csv의 데이터 그래프>
 
+<img src="https://github.com/subineda01/HY-AI-x-DeepLearnig/blob/main/image/distribution%20of%20label.png?raw=true" width="500" height="500"/>
 
 -----------------------
 # III.Methodology & Evaluation
