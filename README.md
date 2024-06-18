@@ -20,7 +20,7 @@ Members :
 
 -------------------------
 # youtube
-()
+[(https://youtu.be/4tjTrrV0VzU)](https://youtu.be/4tjTrrV0VzU)
 
 # I.Proposal
 - Why are you doing this?
@@ -349,8 +349,8 @@ Loss그래프에서 epoch가 지날 때마다 Train Loss가 감소하고, Valida
 -----------------------
 
 ## 2. BertForSequenceClassification
- &ensp;BERT(Bidirectional Encoder Representations from Transformers)는 Goolge에서 개발한 자연어 처리 모델로, 2018년에 발표되었다. 텍스트의 문맥을 양방향으로 이해하는 데 뛰어나 더 뛰어난 성능을 지니고 있다. 
-BERT는 대규모 텍스트 코퍼스에서 학습되어 수억개의 단어를 학습하고 있다. 사전 학습된 이해도를 이용해 전이 학습을 진행하여 목적에 적합한 뛰어난 모델을 구성할 수 있다. 
+ &ensp;BERT(Bidirectional Encoder Representations from Transformers)는 Goolge에서 개발한 자연어 처리 모델로, 2018년에 발표되었다. 텍스트의 문맥을 양방향으로 이해하기 때문에 더 뛰어난 성능을 지니고 있다. 
+BERT는 대규모 텍스트 코퍼스에서 학습되어 수억개의 단어의 정보를 담고 있다. 사전 학습된 이해도를 이용해 전이 학습을 진행하여 목적에 적합한 뛰어난 모델을 구성할 수 있다. 
 BertForSequenceClassification 모델은 Hugging Face의 Transformer 라이브러리에서 제공하는 텍스트 분류 작업을 위한 BERT 기반 모델이다. 이 모델은 BERT의 기본 아키텍처 위에 분류를 위한 추가 레이어를 포함하고 있다.
 
 전체구조
